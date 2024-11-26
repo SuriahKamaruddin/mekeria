@@ -9,6 +9,8 @@ use App\Http\Controllers\SessionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Settings\Staff;
+use App\Http\Controllers\UserManagement;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/setting/dropdown-role',[Staff::class, 'dropdown_role'])->name('dropdown-role');
+//Route::post('/setting/add-staff', [Staff::class, 'add_staff'])->name('add-staff');
+//Route::get('/setting/get_roles_user', [Staff::class,'get_roles_user'])->name('get-roles-user');
+//Route::get('/staff-table-view', [Staff::class, 'staff_table_view'])->name('staff-table-view');
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -41,9 +47,14 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('rtl');
 	})->name('rtl');
 
-	Route::get('user-management', function () {
-		return view('laravel-examples/user-management');
-	})->name('user-management');
+	// Route::get('user-management', function () {
+	// 	return view('pages/user-management');
+	// })->name('user-management');
+
+	
+    Route::get('/user-management', [UserManagement::class, 'index']);
+	Route::post('/add-staff', [UserManagement::class, 'add_staff'])->name('add-staff');
+
 
 	Route::get('tables', function () {
 		return view('tables');
@@ -67,6 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/login', function () {
 		return view('dashboard');
 	})->name('sign-up');
+
 });
 
 
