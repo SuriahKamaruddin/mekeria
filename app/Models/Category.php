@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    use HasFactory;
-
     protected $connection = 'mysql';
     protected $table = 'category';
     protected $fillable =
@@ -16,7 +14,7 @@ class Category extends Model
         'category_description',
         'category_img',
         'is_active',
-        'is_enable',
-        
+        'is_enable'
     ];
+    use HasFactory;
 }

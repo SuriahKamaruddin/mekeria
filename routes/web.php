@@ -59,8 +59,10 @@ Route::group(['middleware' => 'auth'], function () {
 	////menus and category
     Route::get('/menus-management', [MenusController::class, 'index']);
     Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
+    Route::post('/add-menus-management', [MenusController::class, 'insert_product'])->name('insert-product');
 	Route::get('/category-management', [CategoryController::class, 'index']);
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
+    Route::post('/add-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
 
 
 	Route::get('tables', function () {

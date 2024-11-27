@@ -17,9 +17,10 @@ class Menus extends Model
         'menus_description',
         'menus_img',
         'stock',
+        'price',
         'is_active',
         'is_enable',
-        'is_sales',
+        'is_sale',
         'is_sold_out',
         
     ];
