@@ -9,8 +9,9 @@ use App\Http\Controllers\SessionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Settings\Staff;
 use App\Http\Controllers\UserManagement;
+use App\Http\Controllers\MenusController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,12 @@ Route::group(['middleware' => 'auth'], function () {
 	
     Route::get('/user-management', [UserManagement::class, 'index']);
 	Route::post('/add-staff', [UserManagement::class, 'add_staff'])->name('add-staff');
+
+	////menus and category
+    Route::get('/menus-management', [MenusController::class, 'index']);
+    Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
+	Route::get('/category-management', [CategoryController::class, 'index']);
+	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
 
 
 	Route::get('tables', function () {

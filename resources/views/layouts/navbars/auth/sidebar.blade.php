@@ -45,15 +45,15 @@
           <span class="nav-link-text ms-1">Menus Management</span>
         </a>
         <div class="collapse show" id="dashboardsExamples" style="">
-          <ul class="collapse list-unstyled ps-3 {{ (Request::is('menus-management') || Request::is('submenu2') ? 'show' : '') }}" id="submenuManagement">
+          <ul class="collapse list-unstyled ps-3 {{ (Request::is('menus-management') || Request::is('category-management') ? 'show' : '') }}" id="submenuManagement">
             <li class="nav-item">
               <a class="nav-link {{ (Request::is('menus-management') ? 'active' : '') }}" href="{{ url('menus-management') }}">
-                <span class="nav-link-text ms-1">Submenu 1</span>
+                <span class="nav-link-text ms-1">Menus</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ (Request::is('submenu2') ? 'active' : '') }}" href="{{ url('submenu2') }}">
-                <span class="nav-link-text ms-1">Submenu 2</span>
+              <a class="nav-link {{ (Request::is('category-management') ? 'active' : '') }}" href="{{ url('category-management') }}">
+                <span class="nav-link-text ms-1">Category</span>
               </a>
             </li>
           </ul>
