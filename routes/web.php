@@ -47,19 +47,15 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('rtl', function () {
 		return view('rtl');
 	})->name('rtl');
-
-	// Route::get('user-management', function () {
-	// 	return view('pages/user-management');
-	// })->name('user-management');
-
 	
     Route::get('/user-management', [UserManagement::class, 'index']);
 	Route::post('/add-staff', [UserManagement::class, 'add_staff'])->name('add-staff');
 
 	////menus and category
-    Route::get('/menus-management', [MenusController::class, 'index']);
+    Route::get('/menus-management', [MenusController::class, 'index'])->name('menus-index');
     Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
-    Route::post('/add-menus-management', [MenusController::class, 'insert_product'])->name('insert-product');
+    Route::post('/insert-menus-management', [MenusController::class, 'insert_product'])->name('insert-product');
+    Route::get('/delete-menus-management', [MenusController::class, 'delete_product'])->name('delete-product');
 	Route::get('/category-management', [CategoryController::class, 'index']);
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
     Route::post('/add-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');

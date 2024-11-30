@@ -7,58 +7,110 @@ use App\Models\Category;
 use App\Models\Menus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use File;
 
 class MenusController extends Controller
 {
-    public function index(){
-        return view('product.menus-management');
+    public function index()
+    {
+        $menus = Menus::with('category')->get();
+        return view('product.menus-management', compact('menus'));
     }
-    public function add_product(){
+    public function add_product(Request $request)
+    {
+        $type = $request->type;
+        $id = $request->id;
         $categorys = Category::all();
-        return view('product.add-menus-management', compact('categorys'));
-    }
-    public function insert_product(Request $request){
-        //dd($request);
-        //dd($request);
-        // $request->validate([
-        //     'category_name' => 'required|unique:category,category_name',
-        //     'category_description' => 'required',
-        //     'is_active' => 'required',
-        // ]);
-        $is_active = 0;
-        //dd('aa');
-        if($request->chkStatus == 'ON')
-        {
-            $is_active = 1;
-        }
-        $is_salesItem = 0;
-        if($request->chkSalesItem == 'ON')
-        {
-            $is_salesItem = 1;
-        }
-        $is_sold_out = 0;
-        if($request->chkSoldOut == 'ON')
-        {
-            $is_sold_out = 1;
-        }
-        $menus = Menus::create([
-            'category_id' => $request->category,
-            'menus_name' => $request->menus_name,
-            'menus_description' => $request->menus_name,
-            'menus_img' => $request->menus_img,
-            'price' => $request->unit_price,
-            'is_active' => $is_active,
-            'is_sale' => $is_salesItem,
-            'is_sold_out' => $is_sold_out,
-        ]);
-        
-        if ($menus) {
-            Session::flash('success', 'File has been saved successfully');
-            return view('product.menus-management');
+        if ($type == 0) {
+            $menus = null;
         } else {
-            Session::flash('error', 'Failed to save product. Please try again later.');
-            return redirect()->back();
+            $menus = Menus::where('id', $id)->first();
         }
-        
+        return view('product.add-menus-management', compact('categorys', 'menus', 'type', 'id'));
+    }
+    public function insert_product(Request $request)
+    {
+        $type = $request->type;
+        $id = $request->id;
+        if ($type == 0) {
+            if ($request->hasFile('menus_img')) {
+                $attachment = $request->file('menus_img');
+                $att_name = $attachment->getClientOriginalName();
+                $filename = pathinfo($att_name, PATHINFO_FILENAME);
+                $extension = $attachment->getClientOriginalExtension();
+                $fileNameToStore = $filename . '_' . rand() . '.' . $extension;
+                $path = $attachment->move(storage_path('app/public/mekeria/menus'), $fileNameToStore);
+            }
+            $menus = Menus::create([
+                'category_id' => $request->category,
+                'menus_name' => $request->menus_name,
+                'menus_description' => $request->menus_name,
+                'menus_img' => $fileNameToStore,
+                'price' => $request->unit_price,
+                'is_active' => $request->status,
+                'is_sale' =>  $request->sale,
+                'is_sold_out' =>  $request->sold_out,
+            ]);
+        } else {
+            $menus = Menus::where('id', $id)->update([
+                'category_id' => $request->category,
+                'menus_name' => $request->menus_name,
+                'menus_description' => $request->menus_name,
+                'price' => $request->unit_price,
+                'is_active' => $request->status,
+                'is_sale' =>  $request->sale,
+                'is_sold_out' =>  $request->sold_out,
+            ]);
+
+            if ($request->hasFile('menus_img')) {
+
+                $menus = Menus::where('id', $id)->first();
+                $file_path = storage_path('app/public/mekeria/menus/' . $menus->menus_img);
+                if (File::exists($file_path)) {
+                    File::delete($file_path);
+                }
+
+                $attachment = $request->file('menus_img');
+                $att_name = $attachment->getClientOriginalName();
+                $filename = pathinfo($att_name, PATHINFO_FILENAME);
+                $extension = $attachment->getClientOriginalExtension();
+                $fileNameToStore = $filename . '_' . rand() . '.' . $extension;
+                $path = $attachment->move(storage_path('app/public/mekeria/menus/'), $fileNameToStore);
+                $menus = Menus::where('id', $id)->update([
+                    'menus_img' => $fileNameToStore,
+                ]);
+            }
+        }
+
+        if ($menus) {
+            if ($type == 0) {
+                $message = 'New menu have been added!';
+            } else {
+                $message = 'Selected menu have been updated!';
+            }
+            return redirect()->route('menus-index')->with('success', $message);
+        } else {
+            $message = 'Failed to save menu. Please try again later.';
+            return redirect()->route('menus-index')->with('error', $message);
+        }
+    }
+
+    public function delete_product(Request $request)
+    {
+        $menus = Menus::where('id', $request->id)->first();
+        $attach = $menus->menus_img;
+        $file_path = storage_path('app/public/mekeria/menus/' . $attach);
+        if (File::exists($file_path)) {
+            File::delete($file_path);
+        }
+        $menus = Menus::where('id', $request->id)->delete();
+
+        if ($menus) {
+            $message = 'Selected menu have been delected!';
+            return redirect()->route('menus-index')->with('success', $message);
+        } else {
+            $message = 'Failed to delete menu. Please try again later.';
+            return redirect()->route('menus-index')->with('error', $message);
+        }
     }
 }
