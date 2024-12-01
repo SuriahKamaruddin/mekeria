@@ -58,6 +58,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
     Route::post('/insert-menus-management', [MenusController::class, 'insert_product'])->name('insert-product');
     Route::get('/delete-menus-management', [MenusController::class, 'delete_product'])->name('delete-product');
+    Route::get('/update_sales-menus-management', [MenusController::class, 'update_on_sales_product'])->name('update-on-sales-product');
+    Route::get('/update-sales-out-menus-management', [MenusController::class, 'update_sales_out_product'])->name('update-sales-out-product');
 	
 	Route::get('/category-management', [CategoryController::class, 'index'])->name('category-index');
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');

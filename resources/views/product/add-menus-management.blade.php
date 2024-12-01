@@ -61,7 +61,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="sold_out" name="sold_out" autofocus required>
 
-                                    <option @if( isset($menus)) {{ $menus->is_sold_out == 0? 'selected' : '' }} @else selected @endif value="0">N/A</option>
+                                    <option @if( isset($menus)) {{ $menus->is_sold_out == 0? 'selected' : '' }} @else selected @endif value="0">Available</option>
                                     <option @if( isset($menus)) {{ $menus->is_sold_out == 1? 'selected' : '' }} @endif value="1">Sold Out</option>
 
                                 </select>

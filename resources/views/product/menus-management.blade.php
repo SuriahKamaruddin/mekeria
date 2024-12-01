@@ -59,8 +59,26 @@
                                     <td>Img</td>
                                     <td>{{$menu->price}}</td>
                                     <td>@if($menu->is_active == 1) <span class="badge bg-success">Active</span>@else<span class="badge bg-danger">Inactive</span> @endif</td>
-                                    <td>@if($menu->is_sale == 1) <span class="badge bg-primary">On sale</span>@else<span class="text-secondary">N/A</span> @endif</td>
-                                    <td>@if($menu->is_sold_out == 1) <span class="badge bg-danger">Sold Out</span>@else<span class="text-secondary">N/A</span> @endif</td>
+                                    {{-- <td>@if($menu->is_sale == 1) <span class="badge bg-primary">On sale</span>@else<span class="text-secondary">N/A</span> @endif</td>
+                                    <td>@if($menu->is_sold_out == 1) <span class="badge bg-danger">Sold Out</span>@else<span class="text-secondary">N/A</span> @endif</td> --}}
+                                    <td>
+                                        <a href="{{ route('update-on-sales-product', ['id' => $menu->id, 'is_on_sales' => $menu->is_sale]) }}" class="btn btn-sm {{ $menu->is_sale ? 'btn-success' : 'btn-secondary' }} mx-3 update-on-sales-link" data-on-sales="{{ $menu->is_sale }}">
+                                            {{ $menu->is_sale ? 'On Sale' : 'N/A' }}
+                                        </a>
+                                        {{-- <a href="{{ route('update-sales-product', ['id' => $menu->id]) }}" 
+                                            class="btn btn-sm {{ $menu->is_sale ? 'btn-primary' : 'btn-secondary' }}" 
+                                            onclick="confirmToggle({{ $menu->id }}, 'is_sale', this)">{{ $menu->is_sale ? 'On Sale' : 'N/A' }}
+                                        </a> --}}
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('update-sales-out-product', ['id' => $menu->id, 'is_sold_out' => $menu->is_sold_out]) }}" class="btn btn-sm {{ $menu->is_sold_out ? 'btn-danger' : 'btn-secondary' }} mx-3 update-sales-out-link" data-is-sold-out="{{ $menu->is_sold_out }}">
+                                            {{ $menu->is_sold_out ? 'Sold Out' : 'Available' }}
+                                        </a>
+                                        {{-- <a href="{{ route('update-sales-out-product', ['id' => $menu->id]) }}" 
+                                            class="btn btn-sm {{ $menu->is_sold_out ? 'btn-danger' : 'btn-secondary' }}" 
+                                            onclick="confirmToggle({{ $menu->id }}, 'is_sold_out', this)">{{ $menu->is_sold_out ? 'Sold Out' : 'N/A' }}
+                                        </a> --}}
+                                    </td>
                                     <td class="text-center">
                                         <a href="{{ route('add-product',['type'=>1,'id'=>$menu->id]) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit">
                                             <i class="fas fa-edit text-secondary"></i>
@@ -68,7 +86,6 @@
                                         <a href="{{ route('delete-product', ['id' => $menu->id]) }}" class="mx-3 delete-link" data-bs-toggle="tooltip" data-bs-original-title="Delete">
                                             <i class="cursor-pointer fas fa-trash text-secondary"></i>
                                         </a>
-
                                     </td>
                                 </tr>
                                 @endforeach
@@ -111,6 +128,79 @@
                 }
             });
         });
+
+        
+        $('.update-on-sales-link').on('click', function(e){
+            e.preventDefault();
+            let updateOnSalesUrl = $(this).attr('href');
+            const isOnSales = $(this).attr('data-on-sales') == '1';
+            const action = isOnSales ? 'mark as not available' : 'mark as on Sales';
+            const statusText = isOnSales? 'This will mark the product as not available.' : 'This will mark the product as On Sales.';
+            
+            Swal.fire({
+                title: `Are you sure you want to ${action}?`,
+                text: statusText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: `Yes, ${action}!`
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.href = updateOnSalesUrl;
+                }
+            });
+        });
+
+        $('.update-sales-out-link').on('click', function(e){
+            e.preventDefault();
+            let updateSaleOutsUrl = $(this).attr('href');
+            const isSoldOut = $(this).attr('data-is-sold-out') == '1';
+            const action = isSoldOut ? 'mark as available' : 'mark as sold out';
+            const statusText = isSoldOut? 'This will mark the product as available again.' : 'This will mark the product as sold out.';
+            Swal.fire({
+                title: `Are you sure you want to ${action}?`,
+                text: statusText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: `Yes, ${action}!`
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.href = updateSaleOutsUrl;
+                }
+            });
+        });
     });
+    // function confirmToggle(event, link) {
+    //     event.preventDefault(); // Prevent the default action (navigation)
+    //     //console.log(event);
+    //     // console.log(link);
+    //     // Get the `is_sold_out` value from the data attribute
+    //     const isSoldOut = link.getAttribute('data-is-sold-out') == '1'; // Convert to boolean
+    //     // console.log(isSoldOut);
+    //     // Customize the confirmation message
+    //     const action = isSoldOut ? 'mark as available' : 'mark as sold out';
+    //     const statusText = isSoldOut 
+    //         ? 'This will mark the product as available again.' 
+    //         : 'This will mark the product as sold out.';
+        
+    //     // Show SweetAlert confirmation
+    //     Swal.fire({
+    //         title: `Are you sure you want to ${action}?`,
+    //         text: statusText,
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: `Yes, ${action}!`
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             // If confirmed, navigate to the link's href
+    //             window.location.href = link.href;
+    //         }
+    //     });
+    // };
 </script>
 @endsection

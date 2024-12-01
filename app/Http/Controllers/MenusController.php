@@ -119,4 +119,35 @@ class MenusController extends Controller
             return redirect()->route('menus-index')->with('error', $message);
         }
     }
+
+    public function update_on_sales_product(Request $request){
+        $id = $request->id;
+        $is_on_sales = $request->is_on_sales;
+        $menus = Menus::where('id', $id)->update([
+            'is_sale' =>  $request->is_on_sales == "1" ? 0 : 1,
+        ]);
+        if ($menus) {
+            $message = 'Selected menu have been updated!';
+            return redirect()->route('menus-index')->with('success', $message);
+        } else {
+            $message = 'Failed to save menu. Please try again later.';
+            return redirect()->route('menus-index')->with('error', $message);
+        }
+
+    }
+    public function update_sales_out_product(Request $request){
+        $id = $request->id;
+        $is_sold_out = $request->is_sold_out;
+        
+        $menus = Menus::where('id', $id)->update([
+            'is_sold_out' =>  $request->is_sold_out == "1" ? 0 : 1,
+        ]);
+        if ($menus) {
+            $message = 'Selected menu have been updated!';
+            return redirect()->route('menus-index')->with('success', $message);
+        } else {
+            $message = 'Failed to save menu. Please try again later.';
+            return redirect()->route('menus-index')->with('error', $message);
+        }
+    }
 }
