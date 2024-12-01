@@ -10,16 +10,15 @@
                 </div>
                 <div class="card-body">
 
-                    <form id="addProductForm" class="mb-3" action="{{route('insert-category')}}"
-                        enctype="multipart/form-data" method="POST">
+                    <form id="addCategoryForm" class="mb-3" action="{{route('insert-category',['type'=>$type,'id'=>$id])}}" enctype="multipart/form-data" method="POST">
                         @csrf
                         <div class="form-floating form-floating-outline mb-4">
-                            <input type="text" class="form-control" id="category_name" name="category_name" autofocus
+                            <input type="text" class="form-control" id="category_name" name="category_name" autofocus value="{{$category->category_name ?? ''}}"
                                 required />
                             <label for="category_name">Category Name</label>
                         </div>
                         <div class="form-floating form-floating-outline mb-4">
-                            <input type="text" class="form-control" id="category_detail" name="category_detail" autofocus
+                            <input type="text" class="form-control" id="category_detail" name="category_detail" autofocus value="{{$category->category_description ?? ''}}"
                                 required />
                             <label for="category_detail">Category Details</label>
                         </div>
@@ -27,12 +26,24 @@
                             <input type="file" class="form-control" id="category_img" name="category_img" autofocus />
                             <label for="category_img">Product Image</label>
                         </div>
-                        <div class="row">
-                            <div class="col-12 col-md-2">
-                                <div class="form-check form-switch mb-4">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="chkStatus" name="chkStatus" />
-                                    <label class="form-check-label" for="chkStatus">Status</label>
+                        @if($category && !empty($category->category_img))
+                        <div class="mb-4">
+                            <div class="card" >
+                                <img class="card-img-top" src="{{ asset('storage/mekeria/category/' . $category->category_img) }}" alt="Menu Image">
+
+                                <div class="card-body">
+                                    <a target_blank href="{{ asset('storage/mekeria/category/' . $category->category_img) }}">File: {{ $category->category_img}}</a>
                                 </div>
+                            </div>
+                        </div>
+                        @endif
+                        <div class="row">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="form-select" id="status" name="status" autofocus required>
+                                    <option @if( isset($category)) {{ $category->is_active == 0? 'selected' : '' }} @endif value="0">Inactive</option>
+                                    <option @if( isset($category)) {{ $category->is_active == 1? 'selected' : '' }}@else selected @endif value="1">Active</option>
+                                </select>
+                                <label for="category">Category Status</label>
                             </div>
                         </div>
                         
