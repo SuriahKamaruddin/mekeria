@@ -7,7 +7,8 @@ use App\Models\Category;
 use App\Models\Menus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use File;
+use Illuminate\Support\Facades\File;
+//use File;
 
 class MenusController extends Controller
 {
@@ -33,6 +34,17 @@ class MenusController extends Controller
         $type = $request->type;
         $id = $request->id;
         if ($type == 0) {
+            
+            $menus = Menus::create([
+                'category_id' => $request->category,
+                'menus_name' => $request->menus_name,
+                'menus_description' => $request->menus_name,
+                // 'menus_img' => $fileNameToStore,
+                'price' => $request->unit_price,
+                'is_active' => $request->status,
+                'is_sale' =>  $request->sale,
+                'is_sold_out' =>  $request->sold_out,
+            ]);
             if ($request->hasFile('menus_img')) {
                 $attachment = $request->file('menus_img');
                 $att_name = $attachment->getClientOriginalName();
@@ -40,17 +52,11 @@ class MenusController extends Controller
                 $extension = $attachment->getClientOriginalExtension();
                 $fileNameToStore = $filename . '_' . rand() . '.' . $extension;
                 $path = $attachment->move(storage_path('app/public/mekeria/menus'), $fileNameToStore);
+
+                $menus = Menus::where('id', $menus->id)->update([
+                    'menus_img' => $fileNameToStore,
+                ]);
             }
-            $menus = Menus::create([
-                'category_id' => $request->category,
-                'menus_name' => $request->menus_name,
-                'menus_description' => $request->menus_name,
-                'menus_img' => $fileNameToStore,
-                'price' => $request->unit_price,
-                'is_active' => $request->status,
-                'is_sale' =>  $request->sale,
-                'is_sold_out' =>  $request->sold_out,
-            ]);
         } else {
             $menus = Menus::where('id', $id)->update([
                 'category_id' => $request->category,

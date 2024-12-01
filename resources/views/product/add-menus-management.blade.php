@@ -50,8 +50,8 @@
                         <div class="col-12 col-md-3">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="sale" name="sale" autofocus required>
-                                    <option @if( isset($menus)) {{ $menus->is_sale == 0? 'selected' : '' }} @endif value="0">N/A</option>
-                                    <option @if( isset($menus)) {{ $menus->is_sale == 1? 'selected' : '' }}@else selected @endif value="1">On Sale</option>
+                                    <option @if( isset($menus)) {{ $menus->is_sale == 0? 'selected' : '' }} @else selected @endif value="0">N/A</option>
+                                    <option @if( isset($menus)) {{ $menus->is_sale == 1? 'selected' : '' }} @endif value="1">On Sale</option>
 
                                 </select>
                                 <label for="category">Product Sale Status</label>
@@ -61,8 +61,8 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="sold_out" name="sold_out" autofocus required>
 
-                                    <option @if( isset($menus)) {{ $menus->is_sold_out == 0? 'selected' : '' }} @endif value="0">N/A</option>
-                                    <option @if( isset($menus)) {{ $menus->is_sold_out == 1? 'selected' : '' }} @else selected @endif value="1">Sold Out</option>
+                                    <option @if( isset($menus)) {{ $menus->is_sold_out == 0? 'selected' : '' }} @else selected @endif value="0">N/A</option>
+                                    <option @if( isset($menus)) {{ $menus->is_sold_out == 1? 'selected' : '' }} @endif value="1">Sold Out</option>
 
                                 </select>
                                 <label for="category">Product Sold Out Status</label>
@@ -70,7 +70,7 @@
                         </div>
 
                     </div>
-                    @if($menus)
+                    
                     <div class="row mb-4">
                         <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
@@ -78,7 +78,7 @@
                                 <label for="menus_img">Menu Image</label>
                             </div>
                         </div>
-
+                        @if($menus && !empty($menus->menus_img))
                         <div class="col-3">
                             <div class="card" >
                                 <img class="card-img-top" src="{{ asset('storage/mekeria/menus/' . $menus->menus_img) }}" alt="Menu Image">
@@ -88,8 +88,9 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     </div>
-                    @endif
+                    
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>

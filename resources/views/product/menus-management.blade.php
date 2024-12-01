@@ -54,7 +54,7 @@
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$menu->menus_name}}</td>
-                                    <td>{{$menu->category->category_name}}</td>
+                                    <td>{{$menu->category->category_name ?? ""}}</td>
                                     <td>{{$menu->menus_description}}</td>
                                     <td>Img</td>
                                     <td>{{$menu->price}}</td>

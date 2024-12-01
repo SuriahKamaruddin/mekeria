@@ -49,17 +49,21 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('rtl');
 	})->name('rtl');
 	
-    Route::get('/user-management', [UserManagement::class, 'index']);
-	Route::post('/add-staff', [UserManagement::class, 'add_staff'])->name('add-staff');
+    Route::get('/user-management', [UserManagement::class, 'index'])->name('user-index');
+	Route::get('/add-user-management', [UserManagement::class, 'add_user_management'])->name('add-user-management');
+	Route::post('/insert-user-management', [UserManagement::class, 'insert_user_management'])->name('insert-user-management');
+	Route::get('/delete-user-management', [UserManagement::class, 'delete_user_management'])->name('delete-user-management');
 
 	////menus and category
     Route::get('/menus-management', [MenusController::class, 'index'])->name('menus-index');
     Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
     Route::post('/insert-menus-management', [MenusController::class, 'insert_product'])->name('insert-product');
     Route::get('/delete-menus-management', [MenusController::class, 'delete_product'])->name('delete-product');
-	Route::get('/category-management', [CategoryController::class, 'index']);
+	
+	Route::get('/category-management', [CategoryController::class, 'index'])->name('category-index');
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
-    Route::post('/add-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
+    Route::post('/insert-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
+    Route::get('/delete-category-management', [CategoryController::class, 'delete_category'])->name('delete-category');
 
 
 	Route::get('tables', function () {
