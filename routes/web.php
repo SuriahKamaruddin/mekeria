@@ -93,9 +93,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-Route::group(['middleware' => 'guest'], function () {
-    Route::get('/', [MainController::class, 'index']);
-    Route::get('/main-menus', [MainController::class, 'main_menus']);
+// Route::group(['middleware' => 'guest'], function () {
+    Route::get('/', [MainController::class, 'index'])->name('main');
+    Route::get('/main-menus', [MainController::class, 'main_menus'])->name('main_menus');
     Route::get('/register', [RegisterController::class, 'create']);
     Route::post('/register', [RegisterController::class, 'store']);
     Route::get('/login', [SessionsController::class, 'create']);
@@ -105,7 +105,7 @@ Route::group(['middleware' => 'guest'], function () {
 	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
 
-});
+// });
 
 Route::get('/login', function () {
     return view('session/login-session');

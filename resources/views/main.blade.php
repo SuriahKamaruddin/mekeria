@@ -51,7 +51,7 @@
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="{{url('/')}}">
             <span>
               Mekeria
             </span>
@@ -64,10 +64,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav  mx-auto ">
               <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{url('/')}}">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="menu.html">Menu</a>
+                <a class="nav-link" href="{{url('/main-menus')}}">Menu</a>
               </li>
             </ul>
             <div class="user_option">
@@ -151,7 +151,7 @@
                       Keria adalah sejenis kuih yang diperbuat daripada ubi keledek madu yang berbentuk seperti donut dan disira dengan gula melaka…
                       Ingin tahu rasanya macam mana? Boleh order sekarang! </p>
                     <div class="btn-box">
-                      <a href="" class="btn1">
+                      <a href="{{url('/main-menus')}}">
                         Order Now
                       </a>
                     </div>
@@ -330,13 +330,46 @@
 
       <ul class="filters_menu">
         <li class="active" data-filter="*">All</li>
-        <li data-filter=".burger">Keria</li>
-        <li data-filter=".pizza">Pastri</li>
-        <li data-filter=".pasta">Makanan</li>
-        <li data-filter=".fries">Minuman</li>
+        @foreach($category as $cat)
+        <li data-filter=".cat_{{ e($cat->id) }}">{{$cat->category_name}}</li>
+        @endforeach
       </ul>
 
       <div class="filters-content">
+        <div class="row grid">
+          @foreach($category as $cat)
+          @foreach($cat->menus as $menu)
+          <div class="col-sm-6 col-lg-4 all cat_{{ e($menu->category_id) }}">
+            <div class="box">
+              <div>
+                <div class="img-box">
+                  <img src="{{ asset('storage/mekeria/menus/' . $menu->menus_img) }}" alt="{{ $menu->menus_name }}">
+                </div>
+                <div class="detail-box">
+                  <h5>
+                    {{ $menu->menus_name }}
+                  </h5>
+                  <p>
+                    {{ $menu->menus_description }}
+                  </p>
+                  <div class="options">
+                    <h6>
+                      RM{{ number_format($menu->price, 2) }}
+                    </h6>
+                    <a href="#">
+                      <!-- SVG Icon for Cart -->
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endforeach
+          @endforeach
+        </div>
+      </div>
+
+      <!-- <div class="filters-content">
         <div class="row grid">
           <div class="col-sm-6 col-lg-4 all pizza">
             <div class="box">
@@ -865,9 +898,9 @@
           </div>
          
         </div>
-      </div>
+      </div> -->
       <div class="btn-box">
-        <a href="">
+        <a href="{{url('/main-menus')}}">
           View More
         </a>
       </div>
@@ -903,7 +936,7 @@
               <a href="">
                 <i class="fa fa-envelope" aria-hidden="true"></i>
                 <span>
-                  demo@gmail.com
+                  mekeria@gmail.com
                 </span>
               </a>
             </div>
@@ -912,10 +945,10 @@
         <div class="col-md-4 footer-col">
           <div class="footer_detail">
             <a href="" class="footer-logo">
-              Feane
+              Mekeria
             </a>
             <p>
-              Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
+              qwertyuiop
             </p>
             <div class="footer_social">
               <a href="">
@@ -950,10 +983,9 @@
       </div>
       <div class="footer-info">
         <p>
-          &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Free Html Templates</a><br><br>
-          &copy; <span id="displayYear"></span> Distributed By
-          <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+          &copy; <span id="displayYear"></span> All Rights Reserved By Mekeria<br><br>
+          &copy; <span id="displayYear"></span> Distributed By Mekeria
+         
         </p>
       </div>
     </div>
