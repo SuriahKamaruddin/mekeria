@@ -25,6 +25,7 @@ class CategoryController extends Controller
         return view('product.add-category-management', compact('category', 'type', 'id'));
     }
     public function insert_category(Request $request){
+
         $type = $request->type;
         $id = $request->id;
 
@@ -43,7 +44,7 @@ class CategoryController extends Controller
                 $fileNameToStore = $filename . '_' . rand() . '.' . $extension;
                 $path = $attachment->move(storage_path('app/public/mekeria/category'), $fileNameToStore);
 
-                $category= Category::where('id', $category->$id)->update([
+                $category= Category::where('id', $category->id)->update([
                     'category_img' => $fileNameToStore,
                 ]);
             }

@@ -17,4 +17,9 @@ class Category extends Model
         'is_enable'
     ];
     use HasFactory;
+
+    public function menus()
+    {
+        return $this->hasMany(Menus::class, 'category_id','id'); 
+    }
 }
