@@ -173,17 +173,18 @@
     <div class="offer_container">
       <div class="container ">
         <div class="row">
+          @foreach($salesItems as $salesItem)
           <div class="col-md-6  ">
             <div class="box ">
               <div class="img-box">
-                <img src="images/o1.jpg" alt="">
+                <img src="{{ asset('storage/mekeria/menus/' . $salesItem->menus_img) }}" alt="{{ $salesItem->menus_name }}">
               </div>
               <div class="detail-box">
                 <h5>
-                  Keria 5pcs
+                  {{$salesItem->menus_name}}
                 </h5>
                 <h6>
-                  <span>20%</span> Off
+                  <span>{{$salesItem->discount ?? 0}}%</span> Off
                 </h6>
                 <a href="">
                   Order Sekarang <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
@@ -242,7 +243,8 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6  ">
+          @endforeach
+          {{-- <div class="col-md-6  ">
             <div class="box ">
               <div class="img-box">
                 <img src="images/o2.jpg" alt="">
@@ -310,7 +312,7 @@
                 </a>
               </div>
             </div>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

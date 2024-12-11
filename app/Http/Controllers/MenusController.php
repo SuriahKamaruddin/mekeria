@@ -33,6 +33,7 @@ class MenusController extends Controller
     {
         $type = $request->type;
         $id = $request->id;
+
         if ($type == 0) {
             
             $menus = Menus::create([
@@ -43,7 +44,7 @@ class MenusController extends Controller
                 'price' => $request->unit_price,
                 'is_active' => $request->status,
                 'is_sale' =>  $request->sale,
-                'is_sold_out' =>  $request->sold_out,
+                'is_sold_out' =>  $request->sold_out
             ]);
             if ($request->hasFile('menus_img')) {
                 $attachment = $request->file('menus_img');
@@ -57,6 +58,12 @@ class MenusController extends Controller
                     'menus_img' => $fileNameToStore,
                 ]);
             }
+            if($request->discount != null){
+                $menus = Menus::where('id', $menus->id)->update([
+                    'discount' => $request->discount,
+                ]);
+            }
+            
         } else {
             $menus = Menus::where('id', $id)->update([
                 'category_id' => $request->category,
@@ -86,8 +93,13 @@ class MenusController extends Controller
                     'menus_img' => $fileNameToStore,
                 ]);
             }
+            if($request->discount != null){
+                $menus = Menus::where('id', $id)->update([
+                    'discount' => $request->discount,
+                ]);
+            }
+            $menus = Menus::where('id', $id)->first();
         }
-
         if ($menus) {
             if ($type == 0) {
                 $message = 'New menu have been added!';
