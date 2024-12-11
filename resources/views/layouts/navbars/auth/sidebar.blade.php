@@ -25,7 +25,7 @@
           <span class="nav-link-text ms-1">Staff Management</span>
         </a>
       </li>
- 
+
       <li class="nav-item">
         <a data-bs-toggle="collapse" href="#{{ 'menus-management' }}" class="nav-link {{ Request::is(['menus-management','category-management','add-menus-management','add-category-management']) ? 'active' : '' }}" aria-controls="rq" role="button" aria-expanded="{{ Request::is(['menus-management','category-management','add-menus-management','add-category-management']) ? 'true' : '' }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -33,7 +33,7 @@
           </div>
           <span class="nav-link-text ms-1">Menus Management</span>
         </a>
-        <div class="collapse {{ Request::is(['menus-management','category-management','add-menus-management','add-category-management']) ? 'show' : '' }}" id="{{ 'menus-management' }}" style="" >
+        <div class="collapse {{ Request::is(['menus-management','category-management','add-menus-management','add-category-management']) ? 'show' : '' }}" id="{{ 'menus-management' }}" style="">
           <ul class="nav ms-4 ps-3">
             <li class="nav-item ">
               <a class="nav-link {{ Request::is(['menus-management','add-menus-management']) ? 'active' : '' }}" href="{{ url('menus-management') }}">
@@ -50,6 +50,34 @@
           </ul>
         </div>
       </li>
+
+      <li class="nav-item">
+        <a data-bs-toggle="collapse" href="#{{ 'order-management' }}" class="nav-link {{ Request::is(['order-management','add-order-management']) ? 'active' : '' }}" aria-controls="rq" role="button" aria-expanded="{{ Request::is(['order-management','add-order-management']) ? 'true' : '' }}">
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <i style="font-size: 1rem;" class="fa fa-file-invoice ps-2 pe-2 text-center text-dark {{ Request::is('order-management') ? 'text-white' : 'text-dark' }} " aria-hidden="true"></i>
+          </div>
+          <span class="nav-link-text ms-1">Order Management</span>
+        </a>
+        <div class="collapse {{ Request::is(['order-management','add-order-management']) ? 'show' : '' }}" id="{{ 'order-management' }}" style="">
+          <ul class="nav ms-4 ps-3">
+            <li class="nav-item ">
+              <a class="nav-link {{ Request::is(['order-management','add-order-management']) ? 'active' : '' }}" href="{{ url('order-management') }}">
+                <span class="sidenav-normal"> Incoming order
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ Request::is(['reporting']) ? 'active' : '' }}" href="{{ url('reporting') }}">
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <i style="font-size: 1rem;" class="fa fa-id-badge ps-2 pe-2 text-center text-dark {{ Request::is(['reporting']) ? 'text-white' : 'text-dark' }} " aria-hidden="true"></i>
+          </div>
+          <span class="nav-link-text ms-1">Reporting</span>
+        </a>
+      </li>
+
     </ul>
   </div>
 </aside>

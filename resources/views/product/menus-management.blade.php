@@ -9,7 +9,7 @@
                 <div class="p-3 ">
 
                     <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
-                        <strong>Success!</strong> {{ Session::get('message', '') }}
+                        <strong>Success!</strong> {{ Session::get('success', '') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                 <div class="p-3">
 
                     <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
-                        <strong>Failed!</strong> {{ Session::get('message', '') }}
+                        <strong>Failed!</strong> {{ Session::get('error', '') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
