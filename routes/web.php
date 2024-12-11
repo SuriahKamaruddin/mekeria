@@ -54,6 +54,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/insert-user-management', [UserManagement::class, 'insert_user_management'])->name('insert-user-management');
 	Route::get('/delete-user-management', [UserManagement::class, 'delete_user_management'])->name('delete-user-management');
 
+	////Customer Register
+	Route::post('/add-customer-user-management', [UserManagement::class, 'add_customer_user_management'])->name('add-customer-user-management');
+
+
 	////menus and category
     Route::get('/menus-management', [MenusController::class, 'index'])->name('menus-index');
     Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
@@ -66,7 +70,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
     Route::post('/insert-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
     Route::get('/delete-category-management', [CategoryController::class, 'delete_category'])->name('delete-category');
-
 
 	Route::get('tables', function () {
 		return view('tables');
@@ -99,7 +102,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [MainController::class, 'index'])->name('main');
     Route::get('/main-menus', [MainController::class, 'main_menus'])->name('main_menus');
     Route::get('/register', [RegisterController::class, 'create']);
-    Route::post('/register', [RegisterController::class, 'store']);
+    Route::post('/register', [RegisterController::class, 'store'])->name('store');
     Route::get('/login', [SessionsController::class, 'create']);
     Route::post('/session', [SessionsController::class, 'store']);
 	Route::get('/login/forgot-password', [ResetController::class, 'create']);
