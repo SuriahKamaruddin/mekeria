@@ -50,4 +50,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id'); // 'role_id' is the foreign key in the users table
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\UserManagement;
 use App\Http\Controllers\MenusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,12 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
     Route::post('/insert-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
     Route::get('/delete-category-management', [CategoryController::class, 'delete_category'])->name('delete-category');
+
+	//order management
+	Route::get('/order-management',[OrderController::class, 'index'])->name('order-management-index');
+	Route::get('/order-management',[OrderController::class, 'index'])->name('order-management-index');
+	Route::get('/order-management',[OrderController::class, 'update-deliver-order-management'])->name('update-deliver-order-management');
+
 
 	Route::get('tables', function () {
 		return view('tables');

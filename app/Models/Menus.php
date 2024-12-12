@@ -28,4 +28,8 @@ class Menus extends Model
     {
         return $this->belongsTo(Category::class, 'category_id'); 
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
