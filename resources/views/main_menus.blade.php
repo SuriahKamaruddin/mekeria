@@ -59,7 +59,7 @@
               <li class="nav-item active">
                 <a class="nav-link" href="menu.html">Menu <span class="sr-only">(current)</span> </a>
               </li>
-             
+
             </ul>
             <div class="user_option">
               <a href="{{url('/login')}}" class="user_link">
@@ -168,8 +168,8 @@
                     <h6>
                       RM{{ number_format($menu->price, 2) }}
                     </h6>
-                    <a href="#">
-                      <!-- SVG Icon for Cart -->
+                    <a class="add-to-cart" data-id="{{$menu->id}}" data-name="{{$menu->menus_name}}" data-price="{{$menu->menus_price}}" data-image="{{$menu->menus_img}}">
+                      <i class="fa fa-shopping-cart text-light"></i>
                     </a>
                   </div>
                 </div>
@@ -180,9 +180,69 @@
           @endforeach
         </div>
       </div>
-     
+
     </div>
   </section>
+
+  <div id="modal" class="modal" tabindex="-1" data-bs-backdrop="modal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <!-- Add 'modal-lg' for a larger modal -->
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-light">
+          <h5 class="title" id="title"></h5>
+          <button type="button" class="btn-close bg-dark" data-bs-dismiss="modal" aria-label="Close"> <i class="fa fa-times text-light"></i></button>
+        </div>
+        <!-- <div class="modal-body"> -->
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img id="header-image" src="" alt="Header Image" class="img-fluid object-fit-cover"> <!-- Ensure image is responsive -->
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title" id="title">Card title</h5>
+                <p class="card-text">
+                  This is a wider card with supporting text below as a natural lead-in to additional content.
+                  This content is a little bit longer.
+                </p>
+                <p class="card-text">
+                  <small class="text-muted">Last updated 3 mins ago</small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- </div> -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+
+
+  <!-- <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <img id="modal-header-image" src="" alt="Header Image" class="img-fluid w-100">
+          <h5 id="modal-title" class="modal-title"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Modal body text goes here.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
 
   <!-- end food section -->
 
@@ -260,7 +320,7 @@
         <p>
           &copy; <span id="displayYear"></span> All Rights Reserved By Mekeria<br><br>
           &copy; <span id="displayYear"></span> Distributed By Mekeria
-         
+
         </p>
       </div>
     </div>
@@ -283,11 +343,35 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
   <!-- custom js -->
   <script src="{{ asset('assets/guest_assets/js/custom.js')}}"></script>
-  <!-- Google Map -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-  </script>
-  <!-- End Google Map -->
 
+  <script>
+    const assetBaseUrl = "{{ asset('storage/mekeria/menus/') }}";
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $(".add-to-cart").on("click", function(e) {
+        e.preventDefault(); // Prevent the default anchor behavior
+
+        // Retrieve data attributes
+        const id = $(this).data("id");
+        const name = $(this).data("name");
+        const price = $(this).data("price");
+        const img = $(this).data("image");
+
+        // Update modal content dynamically
+        $("#header-image").attr("src", `${assetBaseUrl}/${img}`); // Set image source
+        $("#title").text(`${name}`); // Set title
+        $("#modal").fadeIn(); // Show modal
+      });
+
+      // Close modal
+      $(".close").on("click", function() {
+        $("#modal").fadeOut();
+      });
+
+    });
+  </script>
 </body>
 
 </html>
