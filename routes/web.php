@@ -74,8 +74,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	//order management
 	Route::get('/order-management',[OrderController::class, 'index'])->name('order-management-index');
-	Route::get('/order-management',[OrderController::class, 'index'])->name('order-management-index');
-	Route::get('/order-management',[OrderController::class, 'update-deliver-order-management'])->name('update-deliver-order-management');
+	Route::get('/update-prepare-order-management',[OrderController::class, 'update_prepare_order_management'])->name('update-prepare-order-management');
+	Route::get('/update-deliver-order-management',[OrderController::class, 'update_deliver_order_management'])->name('update-deliver-order-management');
 
 
 	Route::get('tables', function () {

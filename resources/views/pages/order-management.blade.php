@@ -9,7 +9,7 @@
             <div class="p-3 ">
 
                 <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
-                    <strong>Success!</strong> {{ Session::get('message', '') }}
+                    <strong>Success!</strong> {{ Session::get('success', '') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
@@ -17,7 +17,7 @@
             <div class="p-3">
 
                 <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
-                    <strong>Failed!</strong> {{ Session::get('message', '') }}
+                    <strong>Failed!</strong> {{ Session::get('error', '') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
@@ -94,21 +94,20 @@
         
         $('.prepare-link').on('click', function(e) {
             e.preventDefault(); // Prevent default link behavior
-
-            let deleteUrl = $(this).attr('href'); // Get the link's href
-
+            let updateOnSalesUrl = $(this).attr('href');
+            const statusText = 'This order will be deliver';
+            
             Swal.fire({
-                title: 'Are you sure?',
-                text: "This action cannot be undone.",
+                title: `Are you sure you want to update?`,
+                text: statusText,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = deleteUrl; // Redirect if confirmed
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: `Yes`
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.href = updateOnSalesUrl;
                 }
             });
         });
@@ -117,18 +116,16 @@
         $('.deliver-link').on('click', function(e){
             e.preventDefault();
             let updateOnSalesUrl = $(this).attr('href');
-            const isOnSales = $(this).attr('data-on-sales') == '1';
-            const action = isOnSales ? 'mark as not available' : 'mark as on Sales';
-            const statusText = isOnSales? 'This will mark the product as not available.' : 'This will mark the product as On Sales.';
+            const statusText = 'This order will be deliver';
             
             Swal.fire({
-                title: `Are you sure you want to ${action}?`,
+                title: `Are you sure you want to update?`,
                 text: statusText,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: `Yes, ${action}!`
+                confirmButtonText: `Yes`
             }).then((result)=>{
                 if(result.isConfirmed){
                     window.location.href = updateOnSalesUrl;
@@ -136,26 +133,26 @@
             });
         });
 
-        $('.update-sales-out-link').on('click', function(e){
-            e.preventDefault();
-            let updateSaleOutsUrl = $(this).attr('href');
-            const isSoldOut = $(this).attr('data-is-sold-out') == '1';
-            const action = isSoldOut ? 'mark as available' : 'mark as sold out';
-            const statusText = isSoldOut? 'This will mark the product as available again.' : 'This will mark the product as sold out.';
-            Swal.fire({
-                title: `Are you sure you want to ${action}?`,
-                text: statusText,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: `Yes, ${action}!`
-            }).then((result)=>{
-                if(result.isConfirmed){
-                    window.location.href = updateSaleOutsUrl;
-                }
-            });
-        });
+        // $('.update-sales-out-link').on('click', function(e){
+        //     e.preventDefault();
+        //     let updateSaleOutsUrl = $(this).attr('href');
+        //     const isSoldOut = $(this).attr('data-is-sold-out') == '1';
+        //     const action = isSoldOut ? 'mark as available' : 'mark as sold out';
+        //     const statusText = isSoldOut? 'This will mark the product as available again.' : 'This will mark the product as sold out.';
+        //     Swal.fire({
+        //         title: `Are you sure you want to ${action}?`,
+        //         text: statusText,
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: `Yes, ${action}!`
+        //     }).then((result)=>{
+        //         if(result.isConfirmed){
+        //             window.location.href = updateSaleOutsUrl;
+        //         }
+        //     });
+        // });
     });
 </script>
 @endsection
