@@ -31,9 +31,12 @@ class RegisterController extends Controller
         $attributes['password'] = bcrypt($attributes['password'] );
         $attributes['role_id'] = $role_id;
         $attributes['email_verified_at'] = now();
+        $attributes['status'] = '0';
         
         session()->flash('success', 'Your account has been created.');
         $user = User::factory()->create($attributes);
+        //$tac = $this->generateTAC($user->id);
+        ///dd($tac);
         //Mail::to($user->email)->send();
         if($user){
             Auth::login($user); 
@@ -41,5 +44,8 @@ class RegisterController extends Controller
         }else{
             
         }
+    }
+    public function generateTAC($id){
+        return rand(100000, 999999); // Generate a 6-digit random code
     }
 }
