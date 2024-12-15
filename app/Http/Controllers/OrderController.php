@@ -19,6 +19,7 @@ class OrderController extends Controller
         $orders = Order::with(['users', 'menus'])->get();
         return view('pages/order-management', compact('orders'));
     }
+  
     public function update_prepare_order_management(Request $request){
         $id = $request->id;
         $order = Order::where('id', $id)->update([
