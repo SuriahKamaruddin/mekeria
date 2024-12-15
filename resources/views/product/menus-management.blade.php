@@ -56,7 +56,7 @@
                                     <td>{{$menu->menus_name}}</td>
                                     <td>{{$menu->category->category_name ?? ""}}</td>
                                     <td>{{$menu->menus_description}}</td>
-                                    <td>Img</td>
+                                    <td><img class="card-img-top" src="{{ asset('storage/mekeria/menus/' . $menu->menus_img) }}" alt="Menu Image"/></td>
                                     <td>{{$menu->price}}</td>
                                     <td>@if($menu->is_active == 1) <span class="badge bg-success">Active</span>@else<span class="badge bg-danger">Inactive</span> @endif</td>
                                     {{-- <td>@if($menu->is_sale == 1) <span class="badge bg-primary">On sale</span>@else<span class="text-secondary">N/A</span> @endif</td>
@@ -130,23 +130,63 @@
         });
 
         
-        $('.update-on-sales-link').on('click', function(e){
+        // $('.update-on-sales-link').on('click', function(e){
+        //     e.preventDefault();
+        //     let updateOnSalesUrl = $(this).attr('href');
+        //     const isOnSales = $(this).attr('data-on-sales') == '1';
+        //     const action = isOnSales ? 'mark as not available' : 'mark as on Sales';
+        //     const statusText = isOnSales? 'This will mark the product as not available.' : 'This will mark the product as On Sales.';
+            
+        //     Swal.fire({
+        //         title: `Are you sure you want to ${action}?`,
+        //         text: statusText,
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: `Yes, ${action}!`
+        //     }).then((result)=>{
+        //         if(result.isConfirmed){
+        //             window.location.href = updateOnSalesUrl;
+        //         }
+        //     });
+        // });
+
+        $('.update-on-sales-link').on('click', function (e) {
             e.preventDefault();
             let updateOnSalesUrl = $(this).attr('href');
             const isOnSales = $(this).attr('data-on-sales') == '1';
-            const action = isOnSales ? 'mark as not available' : 'mark as on Sales';
-            const statusText = isOnSales? 'This will mark the product as not available.' : 'This will mark the product as On Sales.';
-            
+            const action = isOnSales ? 'mark as not available' : 'mark as On Sales';
+            const statusText = isOnSales
+                ? 'This will mark the product as not available.'
+                : 'This will mark the product as On Sales.';
+
+            // Show SweetAlert with conditional input field
             Swal.fire({
                 title: `Are you sure you want to ${action}?`,
-                text: statusText,
+                html: !isOnSales
+                    ? `<p>${statusText}</p><input id="discountInput" type="number" class="swal2-input" placeholder="Enter discount (optional)">`
+                    : `<p>${statusText}</p>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: `Yes, ${action}!`
-            }).then((result)=>{
-                if(result.isConfirmed){
+                confirmButtonText: `Yes, ${action}!`,
+                preConfirm: () => {
+                    // Return discount input value when "On Sales"
+                    return !isOnSales
+                        ? { discount: document.getElementById('discountInput').value || 0 }
+                        : 0;
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const discount = result.value?.discount; // Get discount input if provided
+
+                    // Redirect with optional discount parameter
+                    if (discount && !isOnSales) {
+                        updateOnSalesUrl += `?discount=${encodeURIComponent(discount)}`;
+                    }
+
                     window.location.href = updateOnSalesUrl;
                 }
             });

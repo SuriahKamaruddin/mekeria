@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddonController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoUserController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\MenusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\OrderController;
+use App\Models\MenusAddon;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +73,12 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
     Route::post('/insert-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
     Route::get('/delete-category-management', [CategoryController::class, 'delete_category'])->name('delete-category');
+
+	////Add on
+	Route::get('/menusaddon-management', [AddonController::class, 'index'])->name('menusaddon-index');
+	Route::get('/add-menusaddon-management', [AddonController::class, 'add_menusaddon'])->name('add-menusaddon');
+    Route::post('/insert-menusaddon-management', [AddonController::class, 'insert_menusaddon'])->name('insert-menusaddon');
+    Route::get('/delete-menusaddon-management', [AddonController::class, 'delete_menusaddon'])->name('delete-menusaddon');
 
 	//order management
 	Route::get('/order-management',[OrderController::class, 'index'])->name('order-management-index');

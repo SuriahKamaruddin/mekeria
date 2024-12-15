@@ -48,6 +48,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="{{ route('category-index') }}" type="button" class="btn btn-danger">Exit</a>
                     </form>
                 </div>
             </div>

@@ -59,14 +59,7 @@
                         <!-- Discount Amount Input -->
                         <div class="col-12 col-md-3" id="discount-container" style="display: none;">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input 
-                                    type="number" 
-                                    class="form-control" 
-                                    id="discount" 
-                                    name="discount" 
-                                    min="0" 
-                                    max="100" 
-                                    placeholder="Discount Amount" value="{{$menus->discount ?? '0'}}" >
+                                <input type="number" class="form-control" id="discount" name="discount" min="0" max="100" placeholder="Discount Amount" value="{{$menus->discount ?? '0'}}" >
                                 <label for="discount">Discount Amount (%)</label>
                             </div>
                         </div>
@@ -79,6 +72,26 @@
                                 </select>
                                 <label for="category">Product Sold Out Status</label>
                             </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="form-select" id="is_addon" name="is_addon" autofocus required>
+                                    <option @if( isset($menus)) {{ $menus->is_addon == 0? 'selected' : '' }} @else selected @endif value="0">N/A</option>
+                                    <option @if( isset($menus)) {{ $menus->is_addon == 1? 'selected' : '' }} @endif value="1">Add-On</option>
+                                </select>
+                                <label for="category">Product has Add-On</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-12 col-md-3" id="addon-checkbox-container" style="display: none;">
+                            @foreach($menusaddons as $menusaddon)
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="addonCheckbox{{ $menusaddon->id }}" name="addonCheckbox[]" value="{{ $menusaddon->id }}"
+                                @if(in_array($menusaddon->id, $selectedAddons)) checked @endif>
+                                <label class="form-check-label" for="addonCheckbox{{ $menusaddon->id }}">{{ $menusaddon->name }}</label>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                     
@@ -103,6 +116,7 @@
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ route('menus-index') }}" type="button" class="btn btn-danger">Exit</a>
                 </form>
             </div>
         </div>
@@ -110,32 +124,45 @@
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    // Function to toggle the visibility of the discount textbox
-    function toggleDiscountInput() {
-        // Get the dropdown and discount container
-        const saleDropdown = document.getElementById('sale');
-        const discountContainer = document.getElementById('discount-container');
-        const discountInput = document.getElementById('discount');
+        function toggleDiscountInput() {
+            const saleDropdown = document.getElementById('sale');
+            const discountContainer = document.getElementById('discount-container');
+            const discountInput = document.getElementById('discount');
 
-        // Check the selected value
-        if (saleDropdown.value === "1") {
-            // Show the discount input if "On Sale" is selected
-            discountContainer.style.display = "block";
-            discountInput.setAttribute("required", "required"); // Make it required
-        } else {
-            // Hide the discount input if "N/A" is selected
-            discountContainer.style.display = "none";
-            discountInput.removeAttribute("required"); // Remove the required attribute
-            discountInput.value = ""; // Clear the input value
+            if (saleDropdown.value === "1") {
+                discountContainer.style.display = "block";
+                discountInput.setAttribute("required", "required"); // Make it required
+            } else {
+                discountContainer.style.display = "none";
+                discountInput.removeAttribute("required"); // Remove the required attribute
+                discountInput.value = ""; // Clear the input value
+            }
         }
-    }
 
-    // Attach the function to the dropdown's change event
-    document.getElementById('sale').addEventListener('change', toggleDiscountInput);
+        document.getElementById('sale').addEventListener('change', toggleDiscountInput);
 
-    // Run on page load to set the correct state (for edit pages)
-    toggleDiscountInput();
-});
+        toggleDiscountInput();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const isAddonSelect = document.getElementById('is_addon');
+        const addonCheckboxContainer = document.getElementById('addon-checkbox-container');
+
+        // Show or hide the checkbox based on the initial value
+        function toggleAddonCheckbox() {
+            if (isAddonSelect.value === '1') {
+                addonCheckboxContainer.style.display = 'block';
+            } else {
+                addonCheckboxContainer.style.display = 'none';
+            }
+        }
+
+        // Call toggle function initially
+        toggleAddonCheckbox();
+
+        // Add event listener to handle changes
+        isAddonSelect.addEventListener('change', toggleAddonCheckbox);
+    });
 
 </script>
 

@@ -100,6 +100,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ route('user-index') }}" type="button" class="btn btn-danger">Exit</a>
                 </form>
             </div>
         </div>
