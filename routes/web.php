@@ -108,6 +108,7 @@ Route::group(['middleware' => 'auth'], function () {
 // Route::group(['middleware' => 'guest'], function () {
     Route::get('/', [MainController::class, 'index'])->name('main');
     Route::get('/main-menus', [MainController::class, 'main_menus'])->name('main_menus');
+    Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart');
     Route::get('/register', [RegisterController::class, 'create']);
     Route::post('/register', [RegisterController::class, 'store'])->name('store');
     Route::get('/login', [SessionsController::class, 'create']);
