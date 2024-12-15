@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Menus;
+use App\Models\MenusAddon;
+use App\Models\MenusAddonMaps;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
@@ -22,18 +24,23 @@ class MenusController extends Controller
         $type = $request->type;
         $id = $request->id;
         $categorys = Category::all();
+        $menusaddons = MenusAddon::all();
+        
+
         if ($type == 0) {
             $menus = null;
+            $selectedAddons = [];
         } else {
             $menus = Menus::where('id', $id)->first();
+            $menuWithAddons = Menus::with('menus_addons')->find($id);
+            $selectedAddons = $menuWithAddons->menus_addons->pluck('id')->toArray() ?? [];
         }
-        return view('product.add-menus-management', compact('categorys', 'menus', 'type', 'id'));
+        return view('product.add-menus-management', compact('categorys', 'menus', 'type', 'id', 'menusaddons','selectedAddons'));
     }
     public function insert_product(Request $request)
     {
         $type = $request->type;
         $id = $request->id;
-
         if ($type == 0) {
             
             $menus = Menus::create([
@@ -44,7 +51,9 @@ class MenusController extends Controller
                 'price' => $request->unit_price,
                 'is_active' => $request->status,
                 'is_sale' =>  $request->sale,
-                'is_sold_out' =>  $request->sold_out
+                'is_sold_out' =>  $request->sold_out,
+                'discount' => $request->discount ?? 0,
+                'is_addon' => $request->is_addon,
             ]);
             if ($request->hasFile('menus_img')) {
                 $attachment = $request->file('menus_img');
@@ -57,11 +66,19 @@ class MenusController extends Controller
                 $menus = Menus::where('id', $menus->id)->update([
                     'menus_img' => $fileNameToStore,
                 ]);
-            }
-            if($request->discount != null){
-                $menus = Menus::where('id', $menus->id)->update([
-                    'discount' => $request->discount,
-                ]);
+            };
+            if($request->is_addon == 1){
+                if ($request->has('addonCheckbox')) {
+                    $menusAddonMap = MenusAddonMaps::where('menus_id', $menus->id)->delete();
+                    $addonIds = $request->addonCheckbox; // Array of selected add-on IDs
+    
+                    foreach ($addonIds as $addonId) {
+                        $menusAddonMap = MenusAddonMaps::firstOrCreate([
+                            'menus_id' => $menus->id,
+                            'menus_addon_id' => $addonId,
+                        ]);
+                    }
+                }
             }
             
         } else {
@@ -73,6 +90,8 @@ class MenusController extends Controller
                 'is_active' => $request->status,
                 'is_sale' =>  $request->sale,
                 'is_sold_out' =>  $request->sold_out,
+                'discount' => $request->discount ?? 0,
+                'is_addon' => $request->is_addon,
             ]);
 
             if ($request->hasFile('menus_img')) {
@@ -93,10 +112,20 @@ class MenusController extends Controller
                     'menus_img' => $fileNameToStore,
                 ]);
             }
-            if($request->discount != null){
-                $menus = Menus::where('id', $id)->update([
-                    'discount' => $request->discount,
-                ]);
+            if($request->is_addon == 1){
+                if ($request->has('addonCheckbox')) {
+                    $menusAddonMap = MenusAddonMaps::where('menus_id', $id)->delete();
+                    $addonIds = $request->addonCheckbox; // Array of selected add-on IDs
+                    $data = [];
+                    foreach ($addonIds as $addonId) {
+                        $menusAddonMap = MenusAddonMaps::firstOrCreate([
+                            'menus_id' => $id,
+                            'menus_addon_id' => $addonId,
+                        ]);
+                    }
+                }
+            }else{
+                $menusAddonMap = MenusAddonMaps::where('menus_id', $id)->delete();
             }
             $menus = Menus::where('id', $id)->first();
         }
@@ -135,8 +164,13 @@ class MenusController extends Controller
     public function update_on_sales_product(Request $request){
         $id = $request->id;
         $is_on_sales = $request->is_on_sales;
+        $isOnSalesString = $request->input('is_on_sales');
+        $parsedData = [];
+        parse_str(str_replace('?', '&', $isOnSalesString), $parsedData);
+        $discount = isset($parsedData['discount']) ? (int) $parsedData['discount'] : 0;
         $menus = Menus::where('id', $id)->update([
             'is_sale' =>  $request->is_on_sales == "1" ? 0 : 1,
+            'discount' => $discount,
         ]);
         if ($menus) {
             $message = 'Selected menu have been updated!';

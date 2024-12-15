@@ -19,6 +19,7 @@ class Menus extends Model
         'stock',
         'price',
         'is_active',
+        'is_addon',
         'is_enable',
         'is_sale',
         'is_sold_out',
@@ -31,5 +32,9 @@ class Menus extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+    public function menus_addons()
+    {
+        return $this->belongsToMany(MenusAddon::class, 'menus_addon_map', 'menus_id', 'menus_addon_id'); 
     }
 }

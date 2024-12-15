@@ -27,13 +27,13 @@
       </li>
 
       <li class="nav-item">
-        <a data-bs-toggle="collapse" href="#{{ 'menus-management' }}" class="nav-link {{ Request::is(['menus-management','category-management','add-menus-management','add-category-management']) ? 'active' : '' }}" aria-controls="rq" role="button" aria-expanded="{{ Request::is(['menus-management','category-management','add-menus-management','add-category-management']) ? 'true' : '' }}">
+        <a data-bs-toggle="collapse" href="#{{ 'menus-management' }}" class="nav-link {{ Request::is(['menus-management','category-management','menusaddon-management','add-menus-management','add-category-management','add-menusaddon-management']) ? 'active' : '' }}" aria-controls="rq" role="button" aria-expanded="{{ Request::is(['menus-management','category-management','menusaddon-management','add-menus-management','add-category-management','add-menusaddon-management']) ? 'true' : '' }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <i style="font-size: 1rem;" class="fa fa-file-invoice ps-2 pe-2 text-center text-dark {{ Request::is('menus-management') ? 'text-white' : 'text-dark' }} " aria-hidden="true"></i>
           </div>
           <span class="nav-link-text ms-1">Menus Management</span>
         </a>
-        <div class="collapse {{ Request::is(['menus-management','category-management','add-menus-management','add-category-management']) ? 'show' : '' }}" id="{{ 'menus-management' }}" style="">
+        <div class="collapse {{ Request::is(['menus-management','category-management','add-menus-management','add-category-management','menusaddon-management','add-menusaddon-management']) ? 'show' : '' }}" id="{{ 'menus-management' }}" style="">
           <ul class="nav ms-4 ps-3">
             <li class="nav-item ">
               <a class="nav-link {{ Request::is(['menus-management','add-menus-management']) ? 'active' : '' }}" href="{{ url('menus-management') }}">
@@ -44,6 +44,12 @@
             <li class="nav-item ">
               <a class="nav-link {{ Request::is(['category-management','add-category-management']) ? 'active' : '' }}" href="{{ url('category-management') }}">
                 <span class="sidenav-normal"> Menus Category
+                </span>
+              </a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link {{ Request::is(['menusaddon-management','add-menusaddon-management']) ? 'active' : '' }}" href="{{ url('menusaddon-management') }}">
+                <span class="sidenav-normal"> Topping
                 </span>
               </a>
             </li>
