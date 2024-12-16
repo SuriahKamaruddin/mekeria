@@ -19,15 +19,15 @@ class MainController extends Controller
             $cat->menus = $cat->menus()->take(5)->get();
         }
 
-
         return view('main', compact('category', 'salesItems'));
     }
 
     public function main_menus()
     {
-
+        
         $category = Category::with('menus')->get();
-        return view('main_menus', compact('category'));
+        $carts = Order::all();
+        return view('main_menus', compact('category', 'carts'));
     }
     public function add_cart(Request $request)
     {

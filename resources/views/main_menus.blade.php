@@ -28,7 +28,89 @@
   <link href="{{ asset('assets/guest_assets/css/style.css')}}" rel="stylesheet" />
   <!-- responsive style -->
   <link href="{{ asset('assets/guest_assets/css/responsive.css')}}" rel="stylesheet" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .cart-container {
+      position: relative;
+    }
+    
+    .cart-link {
+      cursor: pointer;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px; /* Hidden offscreen initially */
+      width: 300px;
+      height: 100%; /* Full height of the viewport */
+      background-color: #f9f9f9;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      transition: right 0.3s ease-in-out;
+      z-index: 999;
+      overflow-y: auto; /* Enable vertical scrolling */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    .cart-sidebar::-webkit-scrollbar {
+      width: 8px;
+    }
 
+    .cart-sidebar::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 4px;
+    }
+
+    .cart-sidebar::-webkit-scrollbar-thumb:hover {
+      background-color: #888;
+    }
+
+    .cart-sidebar::-webkit-scrollbar-track {
+      background-color: #f0f0f0;
+    }
+    .cart-sidebar.open {
+      right: 0; /* Slide in */
+    }
+    
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background-color: #333;
+      color: white;
+    }
+    
+    .cart-header h2 {
+      /* font-size: 16px;  */
+      margin: 0;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .close-btn:hover {
+      color: #ff5c5c;
+    }
+    .cart-content {
+      padding: 20px;
+      color: #333;
+      font-size: 16px;
+    }
+    
+  </style>
 </head>
 
 <body class="sub_page">
@@ -66,7 +148,7 @@
                 <i class="fa fa-user" aria-hidden="true"></i>
               </a>
 
-              <a class="cart_link">
+              <a class="cart_link" id="cart-trigger">
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;">
                   <g>
                     <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
@@ -80,17 +162,71 @@
                   </g>
                 </svg>
               </a>
+              <div class="cart-sidebar" id="cart-sidebar">
+                <div class="cart-header">
+                  <h2>Your Cart</h2>
+                  <button class="close-btn" id="close-cart">&times;</button>
+                </div>
+                @if($carts->count() > 0)
+                  @foreach ($carts as $cart)
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                {{-- <img src="{{ url('/storage/product/' . $cartorder->product->product_img) }}"
+                                    class="card-img-top image-fluid" alt="..."> --}}
+                                {{-- <div class="d-flex flex-wrap align-items-end justify-content-end mb-2 pb-1"> --}}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Product : {{ $cart->menus->menus_name }}
+                                    </h5>
+                                    <p class="card-text">
+                                    <div class="col-12">
+                                        <div class="input-group input-group-sm mb-3">
+                                            <button class="btn btn-outline-secondary button-minuscart"
+                                                type="button" data-id="{{ $cart->id }}"><i class="fa-solid fa-minus"></i></button>
+                                            <input id="cartqty{{ $cart->id }}" type="number"
+                                                class="form-control" value="{{ $cart->quantity }}">
+                                            <button class="btn btn-outline-secondary button-pluscart"
+                                                type="button" data-id="{{ $cart->id }}"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    </p>
 
+                                    <p class="card-text">Quantity : 
+                                      <span id="finalqty{{ $cart->id }}">{{ $cart->quantity }}</span>
+                                    </p>
+                                    <p class="card-text">Unit Price : RM
+                                        {{ $cart->price}}</p>
+                                    <p class="card-text">Discount : RM <span
+                                            id="subtotal{{ $cart->id }}">{{ $cart->discount ?? 0 }}</span>
+                                    </p>
+                                    <p class="card-text">Sub Total : RM <span
+                                            id="subtotal{{ $cart->id }}">{{ $cart->subtotal }}</span>
+                                    </p>
+                                    <button onclick="removeToCart({{ $cart->id }});"
+                                        class="btn btn-danger">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  @endforeach
+                @else
+                <div class="cart-content">
+                  <p>Your cart is empty!</p>
+                </div>
+                @endif
+              </div>
             </div>
           </div>
         </nav>
       </div>
     </header>
     <!-- end header section -->
+    
   </div>
 
   <!-- food section -->
-
 
   <section class="food_section layout_padding">
     <div class="container">
@@ -159,7 +295,6 @@
       </div>
     </div>
   </div>
-
 
   <footer class="footer_section">
     <div class="container">
@@ -251,15 +386,13 @@
   <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
   <script src="{{ asset('assets/guest_assets/js/custom.js')}}"></script>
-
-
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
     $(document).ready(function() {
-
       $(".add-to-cart").on("click", function(e) {
         e.preventDefault();
         const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === 'true';
-
+        
         if (!isLoggedIn) {
           window.location.href = "/login";
           return;
@@ -358,6 +491,25 @@
         });
       });
 
+
+      $("#cart-trigger").on("click", function () {
+        $("#cart-sidebar").addClass("open");
+      });
+
+      // Close the cart sidebar when the close button is clicked
+      $("#close-cart").on("click", function () {
+        $("#cart-sidebar").removeClass("open");
+      });
+
+      // Close the sidebar when clicking outside
+      $(document).on("click", function (e) {
+        if (
+          !$(e.target).closest("#cart-sidebar").length &&
+          !$(e.target).closest("#cart-trigger").length
+        ) {
+          $("#cart-sidebar").removeClass("open");
+        }
+      });
     });
   </script>
 </body>
