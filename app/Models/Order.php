@@ -30,4 +30,7 @@ class Order extends Model
     {
         return $this->belongsTo(Menus::class,'menus_id');
     }
+    public function order_addons(){
+        return $this->hasMany(OrderAddOn::class, 'order_id');
+    }
 }

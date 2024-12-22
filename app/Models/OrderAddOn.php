@@ -16,4 +16,14 @@ class OrderAddOn extends Model
         'updated_at',
     ];
     use HasFactory;
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
+    public function order_addon()
+    {
+        return $this->belongsTo(MenusAddon::class, 'addon_id'); // Replace `Addon` with the actual model for your addons
+    }
 }
