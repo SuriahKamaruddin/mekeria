@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('rtl', function () {
 		return view('rtl');
 	})->name('rtl');
-	
+
     Route::get('/user-management', [UserManagement::class, 'index'])->name('user-index');
 	Route::get('/add-user-management', [UserManagement::class, 'add_user_management'])->name('add-user-management');
 	Route::post('/insert-user-management', [UserManagement::class, 'insert_user_management'])->name('insert-user-management');
@@ -68,7 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/delete-menus-management', [MenusController::class, 'delete_product'])->name('delete-product');
     Route::get('/update_sales-menus-management', [MenusController::class, 'update_on_sales_product'])->name('update-on-sales-product');
     Route::get('/update-sales-out-menus-management', [MenusController::class, 'update_sales_out_product'])->name('update-sales-out-product');
-	
+
 	Route::get('/category-management', [CategoryController::class, 'index'])->name('category-index');
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
     Route::post('/insert-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
@@ -113,10 +113,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-// Route::group(['middleware' => 'guest'], function () {
     Route::get('/', [MainController::class, 'index'])->name('main');
     Route::get('/main-menus', [MainController::class, 'main_menus'])->name('main_menus');
-    Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart');
+    Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart')->middleware('auth');;
     Route::get('/register', [RegisterController::class, 'create']);
     Route::post('/register', [RegisterController::class, 'store'])->name('store');
     Route::get('/login', [SessionsController::class, 'create']);
@@ -126,7 +125,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
 
-// });
 
 Route::get('/login', function () {
     return view('session/login-session');

@@ -24,12 +24,11 @@ class SessionsController extends Controller
         {
             $auth = Auth::user()->role_code;
             session()->regenerate();
-        if(Auth::user()->role_code ='C'){
-            return redirect('main-menus')->with(['success'=>'You are logged in.']);
-        }else{
-
-            return redirect('dashboard')->with(['success'=>'You are logged in.']);
-        }
+            if(Auth::user()->role_code == 'C'){
+                return redirect('main-menus')->with(['success'=>'You are logged in.']);
+            }else{
+                return redirect('dashboard')->with(['success'=>'You are logged in.']);
+            }
         }
         else{
 
@@ -39,7 +38,7 @@ class SessionsController extends Controller
 
     public function destroy()
     {
-
+        session()->flush();
         Auth::logout();
 
         return redirect('/login')->with(['success'=>'You\'ve been logged out.']);
