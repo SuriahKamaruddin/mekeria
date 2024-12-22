@@ -24,7 +24,8 @@ class User extends Authenticatable
         'phone',
         'location',
         'about_me',
-        'role_id'
+        'role_id',
+        'role_code',
     ];
 
     /**
@@ -45,7 +46,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id'); // 'role_id' is the foreign key in the users table

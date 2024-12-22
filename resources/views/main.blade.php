@@ -11,6 +11,8 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
+  <meta name="is-logged-in" content="{{ auth()->check() ? 'true' : 'false' }}">
+
   <link rel="shortcut icon" href="{{ asset('assets/img/logos/mekeriaicon.png')}}" type="">
 
   <title> Mekeria </title>
@@ -454,7 +456,7 @@
         <p>
           &copy; <span id="displayYear"></span> All Rights Reserved By Mekeria<br><br>
           &copy; <span id="displayYear"></span> Distributed By Mekeria
-         
+
         </p>
       </div>
     </div>

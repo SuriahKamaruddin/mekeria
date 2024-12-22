@@ -17,20 +17,26 @@ class SessionsController extends Controller
     {
         $attributes = request()->validate([
             'email'=>'required|email',
-            'password'=>'required' 
+            'password'=>'required'
         ]);
 
         if(Auth::attempt($attributes))
         {
+            $auth = Auth::user()->role_code;
             session()->regenerate();
+        if(Auth::user()->role_code ='C'){
+            return redirect('main-menus')->with(['success'=>'You are logged in.']);
+        }else{
+
             return redirect('dashboard')->with(['success'=>'You are logged in.']);
+        }
         }
         else{
 
             return back()->withErrors(['email'=>'Email or password invalid.']);
         }
     }
-    
+
     public function destroy()
     {
 

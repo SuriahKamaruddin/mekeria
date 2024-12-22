@@ -28,16 +28,17 @@ class RegisterController extends Controller
         ]);
         $attributes['password'] = bcrypt($attributes['password'] );
         $attributes['role_id'] = 3;
+        $attributes['role_code'] = 'C';
         $attributes['email_verified_at'] = now();
         $attributes['status'] = '0';
-        
+
         session()->flash('success', 'Your account has been created.');
         $user = User::factory()->create($attributes);
         if($user){
-            Auth::login($user); 
+            Auth::login($user);
             return redirect('/main-menus');
         }else{
-            
+
         }
     }
     public function generateTAC($id){

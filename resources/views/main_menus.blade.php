@@ -11,6 +11,8 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
+  <meta name="is-logged-in" content="{{ auth()->check() ? 'true' : 'false' }}">
+
   <link rel="shortcut icon" href="{{ asset('assets/img/logos/mekeriaicon.png')}}" type="">
 
   <title> Mekeria </title>
@@ -281,7 +283,7 @@
             <div class="card-body">
               <h5 class="card-title">${name}</h5>
               <p class="card-text">
-              ${description}              
+              ${description}
               </p>
             </div>
             <ul class="list-group list-group-flush">
