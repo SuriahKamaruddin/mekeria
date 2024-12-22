@@ -318,7 +318,8 @@
                                                     data-name="{{ $menu->menus_name }}"
                                                     data-description="{{ $menu->menus_description }}"
                                                     data-price="{{ $menu->menus_price }}"
-                                                    data-image="{{ $menu->menus_img }}">
+                                                    data-image="{{ $menu->menus_img }}"
+                                                    data-addons="{{ json_encode($menu->menus_addons) }}">
                                                     <i class="fa fa-shopping-cart text-light"></i>
                                                 </a>
                                             </div>
@@ -459,43 +460,50 @@
                 const description = $(this).data("description");
 
                 const imgPath = `/storage/mekeria/menus/${img}`;
-
+                
+                const addons = $(this).data("addons");
                 $(".modal-body").empty();
+                
+                let addonsHeaderhtml = '';
+                let addonshtml = '';
+                if(addons.length > 0){
+                    
+                    addons.forEach(addon => {
+                        addonshtml += `
+                        <input class="form-check-input addon-check" type="checkbox" value="${addon.id}" id="addon-${addon.id}">
+                        <label class="form-check-label" for="addon-${addon.id}">${addon.name}</label>
+                        `;
+                    });
+                    addonsHeaderhtml = `
+                    <li class="list-group-item">
+                        <h6 class="card-title">Choose any add-ons</h6>
+                        <div class="form-check">
+                            ${addonshtml}
+                        </div>
+                    </li>
+                    `;
+                }
+                //console.log(addonshtml);
 
                 const value = `
-          <div class="card">
-            <img src="${imgPath}" class="card-img-top" style="height: 30vh; object-fit: cover;" alt="${name}">
-            <div class="card-body">
-              <h5 class="card-title">${name}</h5>
-              <p class="card-text">
-              ${description}
-              </p>
-            </div>
-            <ul class="list-group list-group-flush">
-             <li class="list-group-item">
-                <h6 class="card-title">Choose any add-ons</h6>
-                <!-- Add multiple checkboxes for different add-ons -->
-                <div class="form-check">
-                  <input class="form-check-input addon-check" type="checkbox" value="1" id="addon1-${id}">
-                  <label class="form-check-label" for="addon1-${id}">Add-on 1</label>
+                <div class="card">
+                    <img src="${imgPath}" class="card-img-top" style="height: 30vh; object-fit: cover;" alt="${name}">
+                    <div class="card-body">
+                    <h5 class="card-title">${name}</h5>
+                    <p class="card-text">
+                    ${description}
+                    </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                    ${addonsHeaderhtml}
+                    <li class="list-group-item">
+                        <h6 class="card-title">Quantity</h6>
+                        <input type="hidden" name="id-${id}" id="id-${id}">
+                        <input style="width: 50%;" type="number" id="quantity-${id}" class="form-control" placeholder="Enter quantity" value="1" min="1" max="100">
+                    </li>
+                    </ul>
                 </div>
-                <div class="form-check">
-                  <input class="form-check-input addon-check" type="checkbox" value="2" id="addon2-${id}">
-                  <label class="form-check-label" for="addon2-${id}">Add-on 2</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input addon-check" type="checkbox" value="3" id="addon3-${id}">
-                  <label class="form-check-label" for="addon3-${id}">Add-on 3</label>
-                </div>
-              </li>
-              <li class="list-group-item">
-                <h6 class="card-title">Quantity</h6>
-                <input type="hidden" name="id-${id}" id="id-${id}">
-                <input style="width: 50%;" type="number" id="quantity-${id}" class="form-control" placeholder="Enter quantity" value="1" min="1" max="100">
-              </li>
-            </ul>
-          </div>
-        `;
+                `;
 
                 // Set modal content
                 $(".modal-body").append(value);

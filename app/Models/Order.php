@@ -34,4 +34,8 @@ class Order extends Model
     {
         return $this->hasMany(OrderAddOn::class,'order_id');
     }
+
+    public function order_addons(){
+        return $this->hasMany(OrderAddOn::class, 'order_id');
+    }
 }
