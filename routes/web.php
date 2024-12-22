@@ -117,7 +117,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/', [MainController::class, 'index'])->name('main');
     Route::get('/main-menus', [MainController::class, 'main_menus'])->name('main_menus');
-    Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart')->middleware('auth');;
+    Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart')->middleware('auth');
+	Route::post('/order-qty',[MainController::class, 'order_qty'])->name('order-qty');
+	Route::post('/remove-order',[MainController::class, 'remove_order'])->name('remove-order');
+	
     Route::get('/register', [RegisterController::class, 'create']);
     Route::post('/register', [RegisterController::class, 'store'])->name('store');
     Route::get('/login', [SessionsController::class, 'create']);
@@ -126,6 +129,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
 	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
+
+	Route::get('/add-payment', [MainController::class, 'add_payment'])->name('add-payment');
+	Route::post('/order-payment/{id}', [MainController::class, 'order_payment'])->name('order-payment');
 
 
 Route::get('/login', function () {

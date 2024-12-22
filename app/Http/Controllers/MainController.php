@@ -29,6 +29,7 @@ class MainController extends Controller
         $carts = Order::all();
         return view('main_menus', compact('category', 'carts'));
     }
+
     public function add_cart(Request $request)
     {
         $user = auth()->user();
@@ -42,61 +43,60 @@ class MainController extends Controller
         ->where('status', 0)
         ->first();
 
-    // Flag to determine if we need to create a new order or not
-    $createNewOrder = false;
+        // Flag to determine if we need to create a new order or not
+        $createNewOrder = false;
 
-    if ($order) {
-        // Check if addons match
-        $existingAddons = OrderAddOn::where('order_id', $order->id)
-            ->pluck('addon_id')
-            ->toArray();
+        if ($order) {
+            // Check if addons match
+            $existingAddons = OrderAddOn::where('order_id', $order->id)
+                ->pluck('addon_id')
+                ->toArray();
 
-        // Compare existing addons with the requested addons
-        if (!empty($addons)) {
-            $addonsMatch = count($addons) === count($existingAddons) && !array_diff($addons, $existingAddons);
+            // Compare existing addons with the requested addons
+            if (!empty($addons)) {
+                $addonsMatch = count($addons) === count($existingAddons) && !array_diff($addons, $existingAddons);
+            } else {
+                $addonsMatch = empty($existingAddons);
+            }
+
+            if ($addonsMatch) {
+                // Add to the existing order
+                $order->quantity += $quantity;
+                $order->subtotal += $menu->price * $quantity;
+                $order->total = $order->subtotal - ($order->subtotal * $menu->discount / 100);
+                $order->save();
+            } else {
+                // Addons are different, so create a new order
+                $createNewOrder = true;
+            }
         } else {
-            $addonsMatch = empty($existingAddons);
-        }
-
-        if ($addonsMatch) {
-            // Add to the existing order
-            $order->quantity += $quantity;
-            $order->subtotal += $menu->price * $quantity;
-            $order->total = $order->subtotal * $menu->discount / 100;
-            $order->save();
-        } else {
-            // Addons are different, so create a new order
+            // No existing order found, create a new order
             $createNewOrder = true;
         }
-    } else {
-        // No existing order found, create a new order
-        $createNewOrder = true;
-    }
 
-    if ($createNewOrder) {
-        // Create a new order
-        $order = Order::create([
-            'customer_id' => $user->id,
-            'menus_id' => $menuId,
-            'quantity' => $quantity,
-            'price' => $menu->price,
-            'subtotal' => $menu->price * $quantity,
-            'discount' => $menu->discount,
-            'total' => $menu->price * $quantity * $menu->discount / 100,
-            'status' => 0
-        ]);
+        if ($createNewOrder) {
+            // Create a new order
+            $order = Order::create([
+                'customer_id' => $user->id,
+                'menus_id' => $menuId,
+                'quantity' => $quantity,
+                'price' => $menu->price,
+                'subtotal' => $menu->price * $quantity,
+                'discount' => $menu->discount,
+                'total' => ($menu->price - ($menu->price * $menu->discount / 100)) * $quantity,
+                'status' => 0
+            ]);
+        }
+        if($addons){
+            foreach ($addons as $addon) {
+                OrderAddOn::create([
+                    'order_id' => $order->id,
+                    'addon_id' => $addon,
+                ]);
+            }
+        }
 
-       if($addons){
-           foreach ($addons as $addon) {
-               OrderAddOn::create([
-                   'order_id' => $order->id,
-                   'addon_id' => $addon,
-               ]);
-           }
-       }
-    }
-
-    if($order){
+        if($order){
 
             return response()->json(['success' => true, 'message' => 'Item added to cart successfully']);
         }else{
@@ -105,4 +105,22 @@ class MainController extends Controller
         }
 
     }
+    public function order_qty(Request $request){
+
+        $orderID = $request->id;
+        $quantity = $request->qty;
+        $order = Order::where('id', $orderID)->first();
+        $menu = Menus::find($order->menus_id);
+        $order->quantity = $quantity;
+        $order->subtotal += $order->price * $quantity;
+        $order->total = ($order->price-($order->price * $menu->discount / 100)) * $quantity;
+        $order->save();
+    } 
+    public function remove_order(Request $request){
+        $order = Order::where('id', $request->id)->first()->delete();
+        $addons = OrderAddOn::where('order_id', $request->id)->delete();
+    }
+    public function add_payment(){
+
+    } 
 }
