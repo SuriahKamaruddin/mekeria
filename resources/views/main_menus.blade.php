@@ -40,7 +40,7 @@
     .cart-container {
       position: relative;
     }
-    
+
     .cart-link {
       cursor: pointer;
       position: fixed;
@@ -48,7 +48,7 @@
       right: 20px;
       z-index: 1000;
     }
-    
+
     .cart-sidebar {
       position: fixed;
       top: 0;
@@ -81,7 +81,7 @@
     .cart-sidebar.open {
       right: 0; /* Slide in */
     }
-    
+
     .cart-header {
       display: flex;
       justify-content: space-between;
@@ -90,12 +90,12 @@
       background-color: #333;
       color: white;
     }
-    
+
     .cart-header h2 {
       /* font-size: 16px;  */
       margin: 0;
     }
-    
+
     .close-btn {
       background: none;
       border: none;
@@ -111,7 +111,7 @@
       color: #333;
       font-size: 16px;
     }
-    
+
   </style>
 </head>
 
@@ -146,7 +146,7 @@
 
             </ul>
             <div class="user_option">
-              <a href="{{url('/login')}}" class="user_link">
+              <a href="@if(auth()->check() == true){{ url('/logout')}}@else{{url('/login')}}@endif" class="user_link">
                 <i class="fa fa-user" aria-hidden="true"></i>
               </a>
 
@@ -195,7 +195,7 @@
                                     </div>
                                     </p>
 
-                                    <p class="card-text">Quantity : 
+                                    <p class="card-text">Quantity :
                                       <span id="finalqty{{ $cart->id }}">{{ $cart->quantity }}</span>
                                     </p>
                                     <p class="card-text">Unit Price : RM
@@ -225,7 +225,7 @@
       </div>
     </header>
     <!-- end header section -->
-    
+
   </div>
 
   <!-- food section -->
@@ -394,7 +394,7 @@
       $(".add-to-cart").on("click", function(e) {
         e.preventDefault();
         const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === 'true';
-        
+
         if (!isLoggedIn) {
           window.location.href = "/login";
           return;
