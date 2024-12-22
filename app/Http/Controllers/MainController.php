@@ -24,7 +24,7 @@ class MainController extends Controller
 
     public function main_menus()
     {
-        
+
         $category = Category::with('menus')->get();
         $carts = Order::all();
         return view('main_menus', compact('category', 'carts'));
@@ -37,7 +37,44 @@ class MainController extends Controller
         $addons = $request->addons;
 
         $menu = Menus::find($menuId);
+        $order = Order::where('customer_id', $user->id)
+        ->where('menus_id', $menuId)
+        ->where('status', 0)
+        ->first();
 
+    // Flag to determine if we need to create a new order or not
+    $createNewOrder = false;
+
+    if ($order) {
+        // Check if addons match
+        $existingAddons = OrderAddOn::where('order_id', $order->id)
+            ->pluck('addon_id')
+            ->toArray();
+
+        // Compare existing addons with the requested addons
+        if (!empty($addons)) {
+            $addonsMatch = count($addons) === count($existingAddons) && !array_diff($addons, $existingAddons);
+        } else {
+            $addonsMatch = empty($existingAddons);
+        }
+
+        if ($addonsMatch) {
+            // Add to the existing order
+            $order->quantity += $quantity;
+            $order->subtotal += $menu->price * $quantity;
+            $order->total = $order->subtotal * $menu->discount / 100;
+            $order->save();
+        } else {
+            // Addons are different, so create a new order
+            $createNewOrder = true;
+        }
+    } else {
+        // No existing order found, create a new order
+        $createNewOrder = true;
+    }
+
+    if ($createNewOrder) {
+        // Create a new order
         $order = Order::create([
             'customer_id' => $user->id,
             'menus_id' => $menuId,
@@ -48,14 +85,19 @@ class MainController extends Controller
             'total' => $menu->price * $quantity * $menu->discount / 100,
             'status' => 0
         ]);
-        if ($order) {
 
-            foreach ($addons as $addon) {
-                $order = OrderAddOn::create([
-                    'order_id' => $order->id,
-                    'addon_id' => $addon,
-                ]);
-            }
+       if($addons){
+           foreach ($addons as $addon) {
+               OrderAddOn::create([
+                   'order_id' => $order->id,
+                   'addon_id' => $addon,
+               ]);
+           }
+       }
+    }
+
+    if($order){
+
             return response()->json(['success' => true, 'message' => 'Item added to cart successfully']);
         }else{
             return response()->json(['error' => true, 'message' => 'Error! Please try again later.']);

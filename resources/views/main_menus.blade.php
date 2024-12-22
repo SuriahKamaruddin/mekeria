@@ -125,11 +125,36 @@
             color: #333;
             font-size: 16px;
         }
+
+        #whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            background-color: #25D366;
+            /* WhatsApp green */
+            border-radius: 50%;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #whatsapp-button img {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Optional hover effect */
+        #whatsapp-button:hover {
+            background-color: #128C7E;
+            /* WhatsApp darker green */
+        }
     </style>
 </head>
 
 <body class="sub_page">
-
+    <a href="https://wa.me/601136094188" target="_blank" id="whatsapp-button" class="whatsapp-button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+    </a>
     <div class="hero_area">
         <div class="bg-box">
             <img src="{{ asset('assets/img/mekeria_bg_1.jpg') }}" alt="">
