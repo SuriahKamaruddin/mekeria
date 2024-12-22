@@ -17,6 +17,11 @@ class OrderAddOn extends Model
     ];
     use HasFactory;
 
+    public function menusAddon()
+    {
+        return $this->belongsTo(MenusAddon::class,'addon_id');
+    }
+
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id');

@@ -15,6 +15,7 @@ use App\Http\Controllers\MenusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReportingController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -86,6 +87,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/order-management',[OrderController::class, 'index'])->name('order-management-index');
 	Route::get('/update-prepare-order-management',[OrderController::class, 'update_prepare_order_management'])->name('update-prepare-order-management');
 	Route::get('/update-deliver-order-management',[OrderController::class, 'update_deliver_order_management'])->name('update-deliver-order-management');
+
+	Route::get('/reporting',[ReportingController::class, 'index'])->name('reporting-index');
+	Route::get('/reporting-datatable',[ReportingController::class, 'reporting_datatable'])->name('reporting_datatable');
 
 
 	Route::get('tables', function () {

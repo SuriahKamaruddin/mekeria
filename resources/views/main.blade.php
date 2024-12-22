@@ -73,7 +73,7 @@
         }
     </style>
     <div class="hero_area">
-        <a href="https://wa.me/601136094188" target="_blank" id="whatsapp-button" class="whatsapp-button">
+        <a href="https://wa.me/60199467162" target="_blank" id="whatsapp-button" class="whatsapp-button">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
         </a>
         <div class="bg-box">
@@ -439,19 +439,21 @@
                             <a href="">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                                 <span>
-                                    Location
+                                    Kampung Batu Buruk, Terengganu, Malaysia
+                                    Dungun, Terengganu.
+                                    Kuala Terengganu, Terengganu, Malaysia
                                 </span>
                             </a>
                             <a href="">
                                 <i class="fa fa-phone" aria-hidden="true"></i>
                                 <span>
-                                    Call +01 1234567890
+                                    +60199467162
                                 </span>
                             </a>
                             <a href="">
                                 <i class="fa fa-envelope" aria-hidden="true"></i>
                                 <span>
-                                    mekeria@gmail.com
+                                    kvgjutasdnbhd@gmail.com
                                 </span>
                             </a>
                         </div>
@@ -462,25 +464,18 @@
                         <a href="" class="footer-logo">
                             Mekeria
                         </a>
-                        <p>
-                            qwertyuiop
-                        </p>
                         <div class="footer_social">
-                            <a href="">
+                            <a href="https://www.facebook.com/share/19f4XDG2C5/?mibextid=LQQJ4d">
                                 <i class="fa fa-facebook" aria-hidden="true"></i>
                             </a>
-                            <a href="">
-                                <i class="fa fa-twitter" aria-hidden="true"></i>
-                            </a>
-                            <a href="">
-                                <i class="fa fa-linkedin" aria-hidden="true"></i>
-                            </a>
-                            <a href="">
+                            <a href="https://www.instagram.com/mekeria.hq/profilecard/?igsh=bHN0aWtoZjl2dWR0">
                                 <i class="fa fa-instagram" aria-hidden="true"></i>
                             </a>
-                            <a href="">
-                                <i class="fa fa-pinterest" aria-hidden="true"></i>
-                            </a>
+                            <a href="https://www.tiktok.com/@mekeria_batuburuk?_t=8sQmUrrDehs&_r=1">
+                                <span class="icon">
+                                    <img src="//upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ionicons_logo-tiktok.svg/512px-Ionicons_logo-tiktok.svg.png" alt="TikTok" style="width: 20px; height: 20px;">
+                                </span>
+                                                            </a>
                         </div>
                     </div>
                 </div>
@@ -492,7 +487,7 @@
                         Everyday
                     </p>
                     <p>
-                        10.00 Am -10.00 Pm
+                        10.00 am - 07.00 pm
                     </p>
                 </div>
             </div>
