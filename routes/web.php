@@ -15,7 +15,9 @@ use App\Http\Controllers\MenusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\OrderController;
-use App\Models\MenusAddon;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,3 +131,23 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('/login', function () {
     return view('session/login-session');
 })->name('login');
+
+Route::get('/activate/{token}', function ($token) {
+    // Find user by the activation token
+    $user = User::where('activation_token', $token)->first();
+
+
+    if (!$user) {
+        return redirect()->route('login')->withErrors('Invalid activation link.');
+    }
+
+    // Set the user’s email as verified and clear the activation token
+    $user->email_verified_at = now();
+    $user->activation_token = null;
+    $user->save();
+
+    // Log the user in
+    Auth::login($user);
+
+    return redirect()->route('main_menus')->with('status', 'Your account has been activated and you are now logged in.');
+    })->name('activation');
