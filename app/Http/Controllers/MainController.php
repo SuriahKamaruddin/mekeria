@@ -115,12 +115,70 @@ class MainController extends Controller
         $order->subtotal += $order->price * $quantity;
         $order->total = ($order->price-($order->price * $menu->discount / 100)) * $quantity;
         $order->save();
-    } 
+    }
     public function remove_order(Request $request){
         $order = Order::where('id', $request->id)->first()->delete();
         $addons = OrderAddOn::where('order_id', $request->id)->delete();
     }
+    public function display_cart(){
+
+        if(auth()->check() == true){
+            $cart = Order::with('menus', 'order_addons.menusAddon')
+            ->where('customer_id', auth()->user()->id)
+            ->where('status', 0)
+            ->get();
+
+        $cartarray = [];
+
+        foreach ($cart as $key => $value) {
+            $cartarray[] = [
+                'id' => $value->id,
+                'menus_img' => $value->menus->menus_img,
+                'menus' => $value->menus->menus_name,
+                'quantity' => $value->quantity,
+                'price' => number_format($value->price, 2),        // Format to 2 decimal places
+                'subtotal' => number_format($value->subtotal, 2),  // Format to 2 decimal places
+                'discount' => number_format($value->discount, 2),  // Format to 2 decimal places
+                'total' => number_format($value->total, 2),        // Format to 2 decimal places
+                'add_ons' => $value->order_addons->map(function ($addon) {
+                    return [
+                        'name' => $addon->menusAddon->name,
+                        'price' => number_format($addon->menusAddon->price, 2) // Format add-on price
+                    ];
+                })
+            ];
+        }
+        }
+        return response()->json($cartarray);
+    }
+
+    public function updateQuantity(Request $request)
+    {
+        $cart = Order::find($request->cart_id);
+        if ($cart) {
+            $cart->quantity = $request->quantity;
+            $cart->save();
+
+            return response()->json(['message' => 'Quantity updated successfully.']);
+        }
+
+        return response()->json(['message' => 'Cart item not found.'], 404);
+    }
+
+    public function removeItem(Request $request)
+    {
+        $cart = Order::find($request->cart_id);
+        if ($cart) {
+            $cart->delete();
+
+            return response()->json(['message' => 'Item removed successfully.']);
+        }
+
+        return response()->json(['message' => 'Cart item not found.'], 404);
+    }
+
+
     public function add_payment(){
 
-    } 
+    }
 }

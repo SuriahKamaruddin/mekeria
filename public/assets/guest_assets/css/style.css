@@ -42,18 +42,22 @@ body {
   /* Orange border to match background */
 }
 .button-orange {
-  color: #6d421f;
-  background-color: #f28f00;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-}
+    color: #6d421f !important;
+    background-color: #f28f00 !important;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border: 1px solid #f28f00; /* Ensure a visible border */
+    padding: 10px 20px; /* Adjust padding if needed */
+    font-size: 16px; /* Adjust font size if needed */
+    text-align: center; /* Ensure text is aligned properly */
+  }
 
-/* Hover state */
-.button-orange:hover {
-  background-color: #6d421f;
-  color: #f28f00;
-  border-color: #6d421f ;
-}
+  /* Hover state */
+  .button-orange:hover {
+    background-color: #6d421f !important;
+    color: #f28f00 !important;
+    border-color: #6d421f !important;
+  }
 
 .layout_padding {
   padding: 90px 0;

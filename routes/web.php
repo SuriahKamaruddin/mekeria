@@ -124,7 +124,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart')->middleware('auth');
 	Route::post('/order-qty',[MainController::class, 'order_qty'])->name('order-qty');
 	Route::post('/remove-order',[MainController::class, 'remove_order'])->name('remove-order');
-	
+	Route::get('/display-cart',[MainController::class, 'display_cart'])->name('display_cart');
+
+    Route::post('/update-cart-quantity', [MainController::class, 'updateQuantity'])->name('update-cart-quantity');
+Route::post('/remove-cart-item', [MainController::class, 'removeItem'])->name('remove-cart-item');
+
+
     Route::get('/register', [RegisterController::class, 'create']);
     Route::post('/register', [RegisterController::class, 'store'])->name('store');
     Route::get('/login', [SessionsController::class, 'create']);
