@@ -38,10 +38,10 @@ use Illuminate\Support\Facades\Hash;
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/', [HomeController::class, 'home']);
-	Route::get('dashboard', function () {
-		return view('dashboard');
-	})->name('dashboard');
+    Route::get('/dashboard', [HomeController::class, 'home'])->name('dashboard');
+	// Route::get('dashboard', function () {
+	// 	return view('dashboard');
+	// })->name('dashboard');
 
 	Route::get('billing', function () {
 		return view('billing');
@@ -158,6 +158,7 @@ Route::get('/activate/{token}', function ($token) {
 
     // Set the user’s email as verified and clear the activation token
     $user->email_verified_at = now();
+    $user->status = 1;
     $user->activation_token = null;
     $user->save();
 
