@@ -165,5 +165,5 @@ Route::get('/activate/{token}', function ($token) {
     // Log the user in
     Auth::login($user);
 
-    return redirect()->route('main_menus')->with('status', 'Your account has been activated and you are now logged in.');
+    return redirect()->route('login')->with('status', 'Your account has been activated and you are now logged in.');
     })->name('activation');

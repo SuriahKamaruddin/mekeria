@@ -30,7 +30,7 @@ class UserManagement extends Controller
     }
     public function insert_user_management(Request $request){
         $message = '';
-        
+
         $type = $request->type;
         $id = $request->id;
         if($type == 0){
@@ -41,14 +41,17 @@ class UserManagement extends Controller
             }
 
             if($message == ''){
+                $role = Role::find($request->role);
                 $user = User::factory()->create([
                     'name' => $request->name,
                     'email' => Str::lower($request->email),
                     'password' => bcrypt($request->password),
                     'phone' => $request->phone,
-                    'role_id' => $request->role,
+                    'role_id' => $role->id,
+                    'role_code' => $role->role_code,
+                    'status' => 1,
                 ]);
-    
+
                 if($user){
                     $message = 'Successfully add new user';
                     return redirect()->route('user-index')->with('success', $message);
@@ -56,7 +59,7 @@ class UserManagement extends Controller
                     $message = 'Failed to add user. Please try again later.';
                     return redirect()->back()->with('error', $message);
                 }
-                
+
             }else{
                 return redirect()->back()->with('error', $message);
             }
@@ -66,13 +69,15 @@ class UserManagement extends Controller
             if(!$checkUserEmail->isEmpty()){
                 $message .= 'Email is already exists. Please try again!<br>';
             }
-            if($message == ''){
+            if($message == ''){$role = Role::find($request->role);
                 $user = User::where('id', $id)->update([
                     'name' => $request->name,
                     'email' => Str::lower($request->email),
                     // 'password' => bcrypt($request->password),
                     'phone' => $request->phone,
-                    'role_id' => $request->role,
+                    'role_id' => $role->id,
+                    'role_code' => $role->role_code,
+                    'status' => 1,
                 ]);
                 if ($request->filled('password')) {
                     $user = User::where('id', $id)->update([
@@ -86,14 +91,14 @@ class UserManagement extends Controller
                     $message = 'Failed to update user. Please try again later.';
                     return redirect()->back()->with('error', $message);
                 }
-                
+
             }else{
                 return redirect()->back()->with('error', $message);
             }
         }
-        
-        
-        
+
+
+
     }
     public function delete_user_management(Request $request){
         $user = User::where('id', $request->id)->delete();
