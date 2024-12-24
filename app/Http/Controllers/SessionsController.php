@@ -38,7 +38,6 @@ class SessionsController extends Controller
 
             // Attempt to authenticate the user
             if (Auth::attempt($attributes)) {
-                // If the login is successful, reset the attempts counter
                 session()->forget('login_attempts_' . $attributes['email']);
 
                 $user = Auth::user();

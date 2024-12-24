@@ -19,6 +19,7 @@ use App\Http\Controllers\ReportingController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,7 +109,7 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('static-sign-up');
 	})->name('sign-up');
 
-	Route::get('/logout', [SessionsController::class, 'destroy']);
+	Route::get('/logout', [SessionsController::class, 'destroy'])->name('destroy');
 	Route::get('/user-profile', [InfoUserController::class, 'create']);
 	Route::post('/user-profile', [InfoUserController::class, 'store']);
 	Route::get('/login', function () {
@@ -145,6 +146,16 @@ Route::post('/order-payment/{id}', [MainController::class, 'order_payment'])->na
 Route::get('/login', function () {
 	return view('session/login-session');
 })->name('login');
+
+Route::get('/session', function () {
+	if (Auth::check()) {
+		Auth::logout();
+	}
+
+	Session::flush();
+	session()->regenerate(); 
+	return redirect()->route('login');
+});
 
 Route::get('/activate/{token}', function ($token) {
 	// Find user by the activation token

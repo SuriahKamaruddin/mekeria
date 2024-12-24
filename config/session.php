@@ -31,9 +31,9 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => env('SESSION_LIFETIME', 1), //session end in 30min
 
-    'expire_on_close' => false,
+    'expire_on_close' => false, ///close the session when turn off browser
 
     /*
     |--------------------------------------------------------------------------
