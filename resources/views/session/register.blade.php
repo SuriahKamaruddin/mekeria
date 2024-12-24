@@ -20,7 +20,7 @@
                                         <label>Name</label>
                                         <div class="mb-3">
                                             <input type="text" class="form-control" name="name" id="name"
-                                                placeholder="Siti Nor Bin Ali" value="" required autofocus />
+                                                placeholder="Enter your name" value="" required autofocus />
                                             @error('name')
                                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                             @enderror
@@ -28,12 +28,12 @@
                                         <label>Phone</label>
                                         <div class="mb-3">
                                             <input type="tel" class="form-control" name="phone" id="phone"
-                                                placeholder="0123456789" required autofocus />
+                                                placeholder="Enter your phone number" required autofocus />
                                         </div>
                                         <label>Email</label>
                                         <div class="mb-3">
                                             <input type="email" class="form-control" name="email" id="email"
-                                                placeholder="Email" value="" required autofocus>
+                                                placeholder="Enter your email" value="" required autofocus>
                                             @error('email')
                                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                             @enderror
@@ -47,19 +47,6 @@
                                             @enderror
                                         </div>
 
-
-                                        {{-- <div class="form-check form-check-info text-left">
-                                            <input class="form-check-input" type="checkbox" name="agreement"
-                                                id="flexCheckDefault" required autofocus />
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                I agree the <a href="javascript:;"
-                                                    class="text-dark font-weight-bolder">Terms and Conditions</a>
-                                            </label>
-                                            @error('agreement')
-                                                <p class="text-danger text-xs mt-2">First, agree to the Terms and Conditions,
-                                                    then try register again.</p>
-                                            @enderror
-                                        </div> --}}
                                         <div class="g-recaptcha" style="width: 80%;"
                                             data-sitekey="{{ env('NOCAPTCHA_SITEKEY') }}"></div>
                                         <div id="message-wrap">
