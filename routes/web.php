@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Hash;
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/dashboard', [HomeController::class, 'home'])->name('dashboard');
+	Route::get('/dashboard', [HomeController::class, 'home'])->name('dashboard');
 	// Route::get('dashboard', function () {
 	// 	return view('dashboard');
 	// })->name('dashboard');
@@ -55,7 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('rtl');
 	})->name('rtl');
 
-    Route::get('/user-management', [UserManagement::class, 'index'])->name('user-index');
+	Route::get('/user-management', [UserManagement::class, 'index'])->name('user-index');
 	Route::get('/add-user-management', [UserManagement::class, 'add_user_management'])->name('add-user-management');
 	Route::post('/insert-user-management', [UserManagement::class, 'insert_user_management'])->name('insert-user-management');
 	Route::get('/delete-user-management', [UserManagement::class, 'delete_user_management'])->name('delete-user-management');
@@ -65,105 +65,108 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	////menus and category
-    Route::get('/menus-management', [MenusController::class, 'index'])->name('menus-index');
-    Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
-    Route::post('/insert-menus-management', [MenusController::class, 'insert_product'])->name('insert-product');
-    Route::get('/delete-menus-management', [MenusController::class, 'delete_product'])->name('delete-product');
-    Route::get('/update_sales-menus-management', [MenusController::class, 'update_on_sales_product'])->name('update-on-sales-product');
-    Route::get('/update-sales-out-menus-management', [MenusController::class, 'update_sales_out_product'])->name('update-sales-out-product');
+	Route::get('/menus-management', [MenusController::class, 'index'])->name('menus-index');
+	Route::get('/add-menus-management', [MenusController::class, 'add_product'])->name('add-product');
+	Route::post('/insert-menus-management', [MenusController::class, 'insert_product'])->name('insert-product');
+	Route::get('/delete-menus-management', [MenusController::class, 'delete_product'])->name('delete-product');
+	Route::get('/update_sales-menus-management', [MenusController::class, 'update_on_sales_product'])->name('update-on-sales-product');
+	Route::get('/update-sales-out-menus-management', [MenusController::class, 'update_sales_out_product'])->name('update-sales-out-product');
 
 	Route::get('/category-management', [CategoryController::class, 'index'])->name('category-index');
 	Route::get('/add-category-management', [CategoryController::class, 'add_category'])->name('add-category');
-    Route::post('/insert-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
-    Route::get('/delete-category-management', [CategoryController::class, 'delete_category'])->name('delete-category');
+	Route::post('/insert-category-management', [CategoryController::class, 'insert_category'])->name('insert-category');
+	Route::get('/delete-category-management', [CategoryController::class, 'delete_category'])->name('delete-category');
 
 	////Add on
 	Route::get('/menusaddon-management', [AddonController::class, 'index'])->name('menusaddon-index');
 	Route::get('/add-menusaddon-management', [AddonController::class, 'add_menusaddon'])->name('add-menusaddon');
-    Route::post('/insert-menusaddon-management', [AddonController::class, 'insert_menusaddon'])->name('insert-menusaddon');
-    Route::get('/delete-menusaddon-management', [AddonController::class, 'delete_menusaddon'])->name('delete-menusaddon');
+	Route::post('/insert-menusaddon-management', [AddonController::class, 'insert_menusaddon'])->name('insert-menusaddon');
+	Route::get('/delete-menusaddon-management', [AddonController::class, 'delete_menusaddon'])->name('delete-menusaddon');
 
 	//order management
-	Route::get('/order-management',[OrderController::class, 'index'])->name('order-management-index');
-	Route::get('/update-prepare-order-management',[OrderController::class, 'update_prepare_order_management'])->name('update-prepare-order-management');
-	Route::get('/update-deliver-order-management',[OrderController::class, 'update_deliver_order_management'])->name('update-deliver-order-management');
+	Route::get('/order-management', [OrderController::class, 'index'])->name('order-management-index');
+	Route::get('/update-prepare-order-management', [OrderController::class, 'update_prepare_order_management'])->name('update-prepare-order-management');
+	Route::get('/update-deliver-order-management', [OrderController::class, 'update_deliver_order_management'])->name('update-deliver-order-management');
 
-	Route::get('/reporting',[ReportingController::class, 'index'])->name('reporting-index');
-	Route::get('/reporting-datatable',[ReportingController::class, 'reporting_datatable'])->name('reporting_datatable');
+	Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting-index');
+	Route::get('/reporting-datatable', [ReportingController::class, 'reporting_datatable'])->name('reporting_datatable');
 
 
 	Route::get('tables', function () {
 		return view('tables');
 	})->name('tables');
 
-    Route::get('virtual-reality', function () {
+	Route::get('virtual-reality', function () {
 		return view('virtual-reality');
 	})->name('virtual-reality');
 
-    Route::get('static-sign-in', function () {
+	Route::get('static-sign-in', function () {
 		return view('static-sign-in');
 	})->name('sign-in');
 
-    Route::get('static-sign-up', function () {
+	Route::get('static-sign-up', function () {
 		return view('static-sign-up');
 	})->name('sign-up');
 
-    Route::get('/logout', [SessionsController::class, 'destroy']);
+	Route::get('/logout', [SessionsController::class, 'destroy']);
 	Route::get('/user-profile', [InfoUserController::class, 'create']);
 	Route::post('/user-profile', [InfoUserController::class, 'store']);
-    Route::get('/login', function () {
+	Route::get('/login', function () {
 		return view('dashboard');
 	})->name('sign-up');
-
 });
 
 
 
-    Route::get('/', [MainController::class, 'index'])->name('main');
-    Route::get('/main-menus', [MainController::class, 'main_menus'])->name('main_menus');
-    Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart')->middleware('auth');
-	Route::post('/order-qty',[MainController::class, 'order_qty'])->name('order-qty');
-	Route::post('/remove-order',[MainController::class, 'remove_order'])->name('remove-order');
-	Route::get('/display-cart',[MainController::class, 'display_cart'])->name('display_cart');
+Route::get('/', [MainController::class, 'index'])->name('main');
+Route::get('/main-menus', [MainController::class, 'main_menus'])->name('main_menus');
+Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart')->middleware('auth');
+Route::post('/order-qty', [MainController::class, 'order_qty'])->name('order-qty');
+Route::post('/remove-order', [MainController::class, 'remove_order'])->name('remove-order');
+Route::get('/display-cart', [MainController::class, 'display_cart'])->name('display_cart');
 
-    Route::post('/update-cart-quantity', [MainController::class, 'updateQuantity'])->name('update-cart-quantity');
+Route::post('/update-cart-quantity', [MainController::class, 'updateQuantity'])->name('update-cart-quantity');
 Route::post('/remove-cart-item', [MainController::class, 'removeItem'])->name('remove-cart-item');
 
 
-    Route::get('/register', [RegisterController::class, 'create']);
-    Route::post('/register', [RegisterController::class, 'store'])->name('store');
-    Route::get('/login', [SessionsController::class, 'create']);
-    Route::post('/session', [SessionsController::class, 'store']);
-	Route::get('/login/forgot-password', [ResetController::class, 'create']);
-	Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
-	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
-	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
+Route::get('/register', [RegisterController::class, 'create']);
+Route::post('/register', [RegisterController::class, 'store'])->name('store');
+Route::get('/login', [SessionsController::class, 'create']);
+Route::post('/session', [SessionsController::class, 'store']);
+Route::get('/login/forgot-password', [ResetController::class, 'create']);
+Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
+Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
+Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
 
-	Route::get('/add-payment', [MainController::class, 'add_payment'])->name('add-payment');
-	Route::post('/order-payment/{id}', [MainController::class, 'order_payment'])->name('order-payment');
+Route::get('/add-payment', [MainController::class, 'add_payment'])->name('add-payment');
+Route::post('/order-payment/{id}', [MainController::class, 'order_payment'])->name('order-payment');
 
 
 Route::get('/login', function () {
-    return view('session/login-session');
+	return view('session/login-session');
 })->name('login');
 
 Route::get('/activate/{token}', function ($token) {
-    // Find user by the activation token
-    $user = User::where('activation_token', $token)->first();
+	// Find user by the activation token
+	$user = User::where('activation_token', $token)->first();
 
 
-    if (!$user) {
-        return redirect()->route('login')->withErrors('Invalid activation link.');
-    }
+	if (!$user) {
+		return redirect()->route('login')->withErrors('Invalid activation link.');
+	}
 
-    // Set the user’s email as verified and clear the activation token
-    $user->email_verified_at = now();
-    $user->status = 1;
-    $user->activation_token = null;
-    $user->save();
+	// Set the user’s email as verified and clear the activation token
+	$user->email_verified_at = now();
+	$user->status = 1;
+	$user->activation_token = null;
+	$user->save();
 
-    // Log the user in
-    Auth::login($user);
+	// Log the user in
+	Auth::login($user);
 
-    return redirect()->route('main_menus')->with('status', 'Your account has been activated and you are now logged in.');
-    })->name('activation');
+	return redirect()->route('main_menus')->with('status', 'Your account has been activated and you are now logged in.');
+})->name('activation');
+
+Route::get('/session/check', function () {
+	return auth()->check() ? response()->json(['status' => 'active']) : abort(401);
+})->name('session.check');
