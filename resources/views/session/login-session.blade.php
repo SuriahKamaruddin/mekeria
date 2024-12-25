@@ -24,7 +24,7 @@
                                         <label>Email</label>
                                         <div class="mb-3">
                                             <input type="email" class="form-control" name="email" id="email"
-                                                placeholder="Email" value="admin@admin.com" aria-label="Email"
+                                                placeholder="Email" value="admin@mekeria.com" aria-label="Email"
                                                 aria-describedby="email-addon">
                                             @error('email')
                                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>

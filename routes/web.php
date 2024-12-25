@@ -7,6 +7,7 @@ use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\Sidebar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -38,7 +39,6 @@ use Illuminate\Support\Facades\Session;
 //Route::get('/staff-table-view', [Staff::class, 'staff_table_view'])->name('staff-table-view');
 
 Route::group(['middleware' => 'auth'], function () {
-
 	Route::get('/dashboard', [HomeController::class, 'home'])->name('dashboard');
 	// Route::get('dashboard', function () {
 	// 	return view('dashboard');
@@ -60,8 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/add-user-management', [UserManagement::class, 'add_user_management'])->name('add-user-management');
 	Route::post('/insert-user-management', [UserManagement::class, 'insert_user_management'])->name('insert-user-management');
 	Route::get('/delete-user-management', [UserManagement::class, 'delete_user_management'])->name('delete-user-management');
-
+	
 	////Customer Register
+	Route::get('/customer-management', [UserManagement::class, 'customer_index'])->name('customer-index');
 	Route::post('/add-customer-user-management', [UserManagement::class, 'add_customer_user_management'])->name('add-customer-user-management');
 
 
@@ -160,7 +161,6 @@ Route::get('/session', function () {
 });
 
 Route::get('/activate/{token}', function ($token) {
-	// Find user by the activation token
 	$user = User::where('activation_token', $token)->first();
 
 
@@ -173,11 +173,7 @@ Route::get('/activate/{token}', function ($token) {
 	$user->status = 1;
 	$user->activation_token = null;
 	$user->save();
-
-	// Log the user in
-	Auth::login($user);
-
-	return redirect()->route('login')->with('status', 'Your account has been activated and you are now logged in.');
+	return view('session/login-session')->with('status', 'Your account has been activated and you are now logged in.');
 })->name('activation');
 
 Route::get('/session/check', function () {

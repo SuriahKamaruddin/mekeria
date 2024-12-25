@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-
+use Livewire\Livewire;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Livewire::component('sidebar', \App\Http\Livewire\Components\Sidebar::class);
         
     }
 }
