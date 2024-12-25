@@ -16,23 +16,36 @@ class MainController extends Controller
     public function index()
     {
         $category = Category::all();
-        $salesItems = Menus::where('is_sale', 1)->get();
+        $salesItems = Menus::where('is_sale', 1)->where('is_active', 1)->whereNot('is_sold_out', 1)
+        ->whereHas('category', function($query) {
+            $query->where('is_active', 1);  // Check if category is active
+        })
+        ->get();
         foreach ($category as $cat) {
             // Fetch the first 5 menus for each category
             $cat->menus = $cat->menus()->take(5)->get();
         }
-
-        return view('main', compact('category', 'salesItems'));
+        $payments = Payment::with(['paymentorder.order.menus'])
+            ->where('customer_id', auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        $category = Category::with(['menus' => function($query) {
+            $query->where('is_active', 1);
+        }])->where('is_active', 1)->get();
+        $carts = Order::where('customer_id', auth()->user()->id)->where('status', '0')->get();
+        return view('main', compact('category', 'salesItems', 'carts', 'payments'));
     }
 
     public function main_menus()
     {
         $payments = Payment::with(['paymentorder.order.menus'])
-        ->where('customer_id', auth()->user()->id)
-        ->orderBy('updated_at', 'desc')
-        ->get();    
-        $category = Category::with('menus')->get();
-        $carts = Order::all();
+            ->where('customer_id', auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        $category = Category::with(['menus' => function($query) {
+            $query->where('is_active', 1);
+        }])->where('is_active', 1)->get();
+        $carts = Order::where('customer_id', auth()->user()->id)->where('status', '0')->get();
         return view('main_menus', compact('category', 'carts', 'payments'));
     }
 
@@ -66,7 +79,7 @@ class MainController extends Controller
                 // Add to the existing order
                 $order->quantity += $quantity;
                 $order->subtotal += $menu->price * $quantity;
-                $order->discount += ($menu->price*$menu->discount/100) * $quantity;
+                $order->discount += ($menu->price * $menu->discount / 100) * $quantity;
                 // Calculate the total discount (apply the discount to subtotal)
                 $order->total = $order->subtotal - $order->discount;
 
@@ -109,7 +122,7 @@ class MainController extends Controller
                 'quantity' => $quantity,
                 'price' => $menu->price,
                 'subtotal' => $menu->price * $quantity,
-                'discount' => ($menu->price*$menu->discount/100) * $quantity,
+                'discount' => ($menu->price * $menu->discount / 100) * $quantity,
                 'total' => (($menu->price - ($menu->price * $menu->discount / 100)) * $quantity) + ($addonTotal * $quantity), // Add addon price to total
                 'status' => 0
             ]);
@@ -195,7 +208,7 @@ class MainController extends Controller
         if ($cart) {
             $cart->quantity = $request->quantity;
             $cart->subtotal = $cart->price * $cart->quantity;
-            $cart->discount = ($cart->price * $cart->menus->discount/100) * $cart->quantity;
+            $cart->discount = ($cart->price * $cart->menus->discount / 100) * $cart->quantity;
             $cart->total = ($cart->subtotal - $cart->discount) + ($addonTotal * $cart->quantity); // Add addon price to total
             $cart->save();
 

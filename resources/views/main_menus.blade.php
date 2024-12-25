@@ -330,38 +330,6 @@
                                             </div>
                                             @endforeach
                                         </div>
-                                            {{-- @foreach($payments as $payment)
-                                                <div class="card mb-3" style="max-width: 540px;">
-                                                    <div class="row g-0">
-                                                        <div class="col-md-12">
-                                                            <div class="card-body">
-                                                                <h5 class="card-title">Payment No: #{{$payment->id}}</h5>
-                                                                <table class="table table-bordered">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th scope="col">No</th>
-                                                                            <th scope="col">Menus</th>
-                                                                            <th scope="col" style="width: 60px;">Quantity</th>  <!-- Adjust the width here -->
-                                                                            <th scope="col">Status</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach ($payment->paymentorder as $paymentorder)
-                                                                        <tr>
-                                                                            <th>{{ $loop->iteration }}</th>
-                                                                            <th>{{ $paymentorder->order->menus->menus_name }}</th>
-                                                                            <th>{{ $paymentorder->order->quantity }}</th>
-                                                                            <th>{{ $loop->iteration }}</th>
-                                                                        </tr>
-                                                                        @endforeach
-                                                                    </tbody>
-                                                                </table>
-                                                                
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach --}}
                                         @else
                                             <h5 class="card-title">No records</h5>
                                         @endif
@@ -416,14 +384,19 @@
                                                 <h6>
                                                     RM{{ number_format($menu->price, 2) }}
                                                 </h6>
-                                                <a class="add-to-cart" data-id="{{ $menu->id }}"
-                                                    data-name="{{ $menu->menus_name }}"
-                                                    data-description="{{ $menu->menus_description }}"
-                                                    data-price="{{ $menu->menus_price }}"
-                                                    data-image="{{ $menu->menus_img }}"
-                                                    data-addons="{{ json_encode($menu->menus_addons) }}">
-                                                    <i class="fa fa-shopping-cart text-light"></i>
-                                                </a>
+                                                @if ($menu->is_sold_out == 0)
+                                                    <a class="add-to-cart" data-id="{{ $menu->id }}"
+                                                        data-name="{{ $menu->menus_name }}"
+                                                        data-description="{{ $menu->menus_description }}"
+                                                        data-price="{{ $menu->menus_price }}"
+                                                        data-image="{{ $menu->menus_img }}"
+                                                        data-addons="{{ json_encode($menu->menus_addons) }}">
+                                                        <i class="fa fa-shopping-cart text-light"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="badge bg-danger my-auto">Item Sold Out!</span>
+                                                @endif
+                                                
                                             </div>
                                         </div>
                                     </div>
