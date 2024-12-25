@@ -102,7 +102,10 @@
     <div class="overlay"></div>
     <div class="card">
         <h2><span class="text-muted fw-light">Thank you for your payment</span></h2>
-        <b class="text-danger">**This page will redirect after <span id="timer">0:20</span> minutes.</b>
+        <b class="text-danger">**This page will redirect after <span id="timer">0:20</span> minutes. </b>
+        <p class="text-warning">
+            Please do not close this page. You can make a new order after this.
+        </p>
     </div>
 
     <script src="{{ asset('assets/guest_assets/js/jquery-3.4.1.min.js') }}"></script>
