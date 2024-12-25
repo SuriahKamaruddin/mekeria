@@ -7,6 +7,8 @@ use App\Models\Menus;
 use App\Models\MenusAddon;
 use App\Models\Order;
 use App\Models\OrderAddOn;
+use App\Models\Payment;
+use App\Models\PaymentOrderMap;
 use Symfony\Component\HttpFoundation\Request;
 
 class MainController extends Controller
@@ -87,47 +89,47 @@ class MainController extends Controller
             $createNewOrder = true;
         }
 
-            if ($createNewOrder) {
-                // Calculate the price for addons
-                $addonTotal = 0;
-                if ($addons) {
-                    foreach ($addons as $addon) {
-                        $addonItem = MenusAddon::find($addon); // Assuming you have an AddOn model to fetch the addon price
-                        $addonTotal += $addonItem->price; // Sum up the prices of the addons
-                    }
-                }
-
-                // Create a new order
-                $order = Order::create([
-                    'customer_id' => $user->id,
-                    'menus_id' => $menuId,
-                    'quantity' => $quantity,
-                    'price' => $menu->price,
-                    'subtotal' => $menu->price * $quantity,
-                    'discount' => $menu->discount * $quantity,
-                    'total' => (($menu->price - ($menu->price * $menu->discount / 100)) * $quantity) + ($addonTotal * $quantity), // Add addon price to total
-                    'status' => 0
-                ]);
-            }
-
+        if ($createNewOrder) {
+            // Calculate the price for addons
+            $addonTotal = 0;
             if ($addons) {
                 foreach ($addons as $addon) {
-                    OrderAddOn::create([
-                        'order_id' => $order->id,
-                        'addon_id' => $addon,
-                    ]);
+                    $addonItem = MenusAddon::find($addon); // Assuming you have an AddOn model to fetch the addon price
+                    $addonTotal += $addonItem->price; // Sum up the prices of the addons
                 }
             }
 
+            // Create a new order
+            $order = Order::create([
+                'customer_id' => $user->id,
+                'menus_id' => $menuId,
+                'quantity' => $quantity,
+                'price' => $menu->price,
+                'subtotal' => $menu->price * $quantity,
+                'discount' => $menu->discount * $quantity,
+                'total' => (($menu->price - ($menu->price * $menu->discount / 100)) * $quantity) + ($addonTotal * $quantity), // Add addon price to total
+                'status' => 0
+            ]);
+        }
 
-            if ($order) {
-                return response()->json(['success' => true, 'message' => 'Item added to cart successfully']);
-            } else {
-                return response()->json(['error' => true, 'message' => 'Error! Please try again later.']);
+        if ($addons) {
+            foreach ($addons as $addon) {
+                OrderAddOn::create([
+                    'order_id' => $order->id,
+                    'addon_id' => $addon,
+                ]);
             }
         }
-        
-    
+
+
+        if ($order) {
+            return response()->json(['success' => true, 'message' => 'Item added to cart successfully']);
+        } else {
+            return response()->json(['error' => true, 'message' => 'Error! Please try again later.']);
+        }
+    }
+
+
     // public function order_qty(Request $request){
 
     //     $orderID = $request->id;
@@ -218,6 +220,51 @@ class MainController extends Controller
     {
         $user = auth()->user();
         $orders = Order::with('menus', 'order_addons.menusAddon')->where('customer_id', $user->id)->where('status', '0')->get();
+        //dd($orders);
         return view('payment', compact('user', 'orders'));
+    }
+    public function order_payment(Request $request)
+    {
+        $id = $request->id;
+
+        $payment = Payment::create([
+            'customer_id' => $id,
+            'method_delivery' => $request->radioDeliveryMethod,
+            'method_payment' => $request->radioPaymentMethod,
+            'address1' => $request->address_1 ?? '',
+            'address2' => $request->address_2 ?? '',
+            'address3' => $request->address_3 ?? '',
+            'district' => $request->district ?? '',
+            'postcode' => $request->postcode ?? ''
+            // 'payment_img'
+        ]);
+        if ($request->hasFile('payment_receipt')) {
+            $attachment = $request->file('payment_receipt');
+            $att_name = $attachment->getClientOriginalName();
+            $filename = pathinfo($att_name, PATHINFO_FILENAME);
+            $extension = $attachment->getClientOriginalExtension();
+            $fileNameToStore = $filename . '_' . rand() . '.' . $extension;
+            $path = $attachment->move(storage_path('app/public/mekeria/payment'), $fileNameToStore);
+
+            $menus = Payment::where('id', $payment->id)->update([
+                'payment_img' => $fileNameToStore,
+            ]);
+        }
+
+        ///update order status 
+        $orders = Order::where('customer_id', $id)->where('status', '0')->get();
+        if ($orders) {
+            foreach ($orders as $order) {
+                $order->status = 1;
+                $order->save();
+                $paymentMap = PaymentOrderMap::create([
+                    'payment_id' => $payment->id,
+                    'order_id' => $order->id
+                ]);
+            }
+        }
+        if ($payment) {
+            return view('payment_complete');
+        }
     }
 }

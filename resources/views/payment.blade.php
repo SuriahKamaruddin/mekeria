@@ -60,13 +60,11 @@
     <form id="formAuthentication" class="mb-3" action="{{ route('order-payment', ['id' => $user->id]) }}"
         enctype="multipart/form-data" method="POST">
         @csrf
-        {{-- {{ $customer->id }} --}}
-        <input type="hidden" name="user_id" id="user_id" value="">
-        {{-- <input type="hidden" name="order_id" id="order_id" value="{{ $order->id }}"> --}}
         <div class="row">
             <div class="col-md-12">
                 <div class="card w-75 h-100 mx-auto py-2" style="opacity: 90%">
-                    <h6 class="p-2 mb-4"><span class="text-muted fw-light">Checkout/</span> Customer Details</h6>
+                    <h6 class="p-2"><span class="text-muted fw-light">Checkout/</span> Customer Details</h6>
+                    <b class="text-danger p-2">**You have <span id="timer">5:00</span> minutes to complete your payment.</b>
                     <div class="row gy-4 p-4">
                         <div class="col-12">
                             <div class="row align-item-center gy-4">
@@ -95,16 +93,9 @@
                                     <p>Customer Details</p>
                                     <table id="orderTable" class="table table-bordered">
                                         <thead>
-                                            {{-- <tr>
-                                                    <th scope="col">#Order Id: </th>
-                                                    <th scope="col" colspan="3"><span
-                                                            id="order_id">{{ $order->id }}</span>
-                                                    </th>
-                                                </tr> --}}
                                             <tr>
                                                 <th scope="col">Customer Name: </th>
                                                 <th scope="col" colspan="3">
-                                                    {{-- {{ $customer->user_details->fname . ' ' . $customer->user_details->lname }} --}}
                                                     <input type="text" id="customer_name" name="customer_name"
                                                         value="{{$user->name}}"
                                                         class="form-control" autofocus required />
@@ -113,14 +104,9 @@
                                             <tr>
                                                 <th scope="col">Customer Address: </th>
                                                 <th scope="col" colspan="3">
-                                                    {{-- <input type="text" id="customer_address" name="customer_address"
-                                                        value="{{ $customer->user_details->address_1 . ' ' . $customer->user_details->address_2 }}"
-                                                        class="form-control" required /> --}}
-
                                                         <div class="row">
                                                             <div class="col-12 col-md-6">
                                                                 <div class="form-floating form-floating-outline mb-3">
-                                                                    {{-- {{ $customer->user_details->address_1 }} --}}
                                                                     <input type="text" class="form-control form-control-sm" id="address_1"
                                                                         name="address_1" placeholder="Enter your address"
                                                                         value="" autofocus required>
@@ -171,7 +157,6 @@
                                             <tr>
                                                 <th scope="col">Customer Contact: </th>
                                                 <th scope="col" colspan="3">
-                                                    {{-- {{$customer->user_details->contact_no}} --}}
                                                     <input type="text" id="customer_contact" name="customer_contact"
                                                          class="form-control" value="{{$user->phone}}" autofocus required />
 
@@ -200,36 +185,57 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Name</th>
-                                                <th>Remark</th>
                                                 <th>Quantity</th>
+                                                <th>Discount</th>
                                                 <th>Sub Total</th>
+                                                <th>Addon Detail</th>
+                                                <th>Total</th>
                                             </tr>
                                             @foreach ($orders as $order)
                                                 <tr>
                                                     <th>{{ $loop->iteration }} </th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
+                                                    <th>{{$order->menus->menus_name}}</th>
+                                                    <th>{{$order->quantity}}</th>
+                                                    <th>
+                                                        @if ($order->discount >= 1)
+                                                        -RM {{number_format($order->discount, 2)}}    
+                                                        @else
+                                                        RM {{number_format(0, 2)}}
+                                                        @endif
+                                                    </th>
+                                                    <th>RM {{number_format($order->subtotal, 2)}}</th>
+                                                    <th>
+                                                        @if ($order->order_addons->count() >= 1)
+                                                        <table id="remarkstable" class="table table-bordered">
+                                                            <thead>
+                                                                @foreach ($order->order_addons as $addon)
+                                                                <tr>
+                                                                    <th>{{ $loop->iteration }}</th>
+                                                                    <th>{{ $addon->menusAddon->name }}</th>
+                                                                    <th>RM {{ number_format(($addon->menusAddon->price * $order->quantity), 2) }}</th>
+                                                                </tr>
+                                                                @endforeach
+                                                            </thead>
+                                                        </table>
+                                                        @endif
+                                                    </th>
+                                                    <th>RM {{number_format($order->total, 2)}}</th>
                                                     {{-- <th>{{ $item->product->product_name }} ({{ $item->weight->description }})</th>
                                                     <th>{{ $item->product_qty }} </th>
                                                     <th>{{ $item->sub_total }}</th> --}}
                                                 </tr>
                                             @endforeach
                                             <tr>
-                                                <th colspan="2"></th>
+                                                <th colspan="5"></th>
                                                 <th> Total Amount</th>
                                                 {{-- {{ number_format($customer->user_details->uPostcode->delivery_fee+$cart->sum('sub_total') ?? 0, 2) }} --}}
                                                 <th> 
                                                     <span
-                                                    name="total_amount_span" id="total_amount_span"></span>
+                                                    name="total_amount_span" id="total_amount_span">RM {{number_format($orders->sum('total'), 2)}}</span>
                                                 </th>
                                             </tr>
                                         </thead>
                                     </table>
-                                    {{-- {{ number_format($cart->sum('sub_total')  ?? 0, 2) }} --}}
-                                    <input type="hidden" name="total_amount"
-                                        value="">
                                 </div>
                             </div>
 
@@ -245,26 +251,45 @@
                     <div class="row gy-4 p-4">
                         <div class="col-12">
                             <div class="row align-item-center gy-4">
-                                <div class="col-12 col-md-12">
-                                    <div id="transfer">
-                                        <p class="text-danger"> <small><i>**Kindly transfer to the account below and attach the receipt.</i> </small></p>
-                                        <div class="card border" style="width: 100%;">
-                                            <div class="card-header">
+                                <div class="col-12 col-md-6">
 
-                                                <div class="form-check">
- //display qr
-                                                
+                                    <p>Payment Method</p>
+                                    <div class="card border" style="width: 18rem;">
+                                        <div class="card-header">
 
-                                                    <label class="form-check-label" for="radioPaymentMethod1">
-                                                        <b>12345678890</b> <b>(Mekeria Bank Account)</b>
-                                                    </label>
-                                                </div>
+                                            <div class="form-check">
+
+                                                <input class="form-check-input" type="radio" name="radioPaymentMethod"
+                                                    id="radioPaymentMethod1" value="1" checked>
+                                                <label class="form-check-label" for="radioPaymentMethod1">
+                                                    Online Transfer
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="card border" style="width: 18rem;">
+                                        <div class="card-header">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="radioPaymentMethod"
+                                                    id="radioPaymentMethod1" value="2">
+                                                <label class="form-check-label" for="radioPaymentMethod1">
+                                                    QR Scan
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-12">
+                                    <div id="transfer" class="mx-auto">
+                                        <p class="text-danger"> <small><i>**Kindly transfer to the account below and attach the receipt.</i> </small></p>
+                                        <img src="{{ asset('assets/img/logos/maybank-image.png') }}" width="250" alt="">
+                                        <label class="form-check-label" for="radioPaymentMethod1">
+                                            <h4><b>1515-8433-4967</b> <b>(Mekeria Bank Account)</b></h4>
+                                        </label>            
+                                    </div>
                                     <div id="qr" class="mx-auto" style="display: none">
                                         <p class="text-danger"> <small><i>**Kindly scan the QR below and attach the receipt.</i> </small></p>
-                                        <img src="{{ asset('assets/img/elements/qr.jpeg') }}" width="250" alt="">
+                                        <img src="{{ asset('assets/img/logos/QRCode-mekeria.jpg') }}" width="250" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -283,11 +308,11 @@
                                     <button id="completeModal" type="submit" class="btn btn-sm btn-primary">
                                         Proceed Payment
                                     </button>
-                                    {{-- <a href="{{ route('dashboard-customer') }}">
+                                    <a href="{{ route('main_menus') }}">
                                         <button id="completeModal" type="button" class="btn btn-sm btn-danger">
                                             Cancel
                                         </button>
-                                    </a> --}}
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -309,6 +334,25 @@
     <script src="{{ asset('assets/guest_assets/js/custom.js') }}"></script>
     <script>
         $(document).ready(function(){
+
+            const $timerElement = $("#timer");
+            const redirectUrl = "{{ route('main_menus') }}"; // Redirect URL when the timer ends
+            let remainingTime = 300; // 5 minutes in seconds
+
+            // Countdown timer logic
+            const timerInterval = setInterval(function () {
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                $timerElement.text(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+
+                remainingTime--;
+
+                if (remainingTime < 0) {
+                    clearInterval(timerInterval);
+                    // Redirect when the timer ends
+                    window.location.href = redirectUrl;
+                }
+            }, 1000);
 
             const sessionCheckInterval = 60000; // 60 seconds
 
@@ -335,6 +379,20 @@
                     $('input[type="text"], input[type="number"], input[type="checkbox"], input[type="email"], input[type="file"], select, textarea').prop('disabled', true);
                 }else{
                     $('input[type="text"], input[type="number"], input[type="checkbox"], input[type="email"], input[type="file"], select, textarea').prop('disabled', false);
+                }
+            });
+
+            $('input[name="radioPaymentMethod"]').change(function(){
+                if ($(this).val() === '1') {
+                    // Show the div with ID 'transfer'
+                    $('#transfer').show();
+                    $('#qr').hide();
+
+                } else {
+                    // Hide the div with ID 'transfer'
+                    $('#qr').show();
+                    $('#transfer').hide();
+
                 }
             });
         });
