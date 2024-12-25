@@ -295,14 +295,12 @@
                                                             <p class="card-text"><small class="text-muted">Status:</small>
                                                                 @if ($payment->status == 1)
                                                                     Order Confirmed
-                                                                @elseif($payment->status == 2){
+                                                                @elseif($payment->status == 2)
                                                                     Order is preparing by staff
-                                                                }
-                                                                @elseif($payment->status == 3){
+                                                                @elseif($payment->status == 3)
                                                                     On Deliver by rider
-                                                                }@elseif($payment->status == 4){
+                                                                @elseif($payment->status == 4)
                                                                     Completed
-                                                                }
                                                                 @else
                                                                     Order Confirmed
                                                                 @endif
