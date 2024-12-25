@@ -7,12 +7,13 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Module;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function home()
     {
-
         $monthlySales = [];
 
         for ($month = 1; $month <= 12; $month++) {
@@ -79,5 +80,4 @@ class HomeController extends Controller
             'menus' => $menus,
         ]);
     }
-
 }

@@ -7,7 +7,7 @@
     </a>
   </div>
   <hr class="horizontal dark mt-0">
-  <div class="collapse navbar-collapse  w-auto h-auto" id="sidenav-collapse-main">
+  <!-- <div class="collapse navbar-collapse  w-auto h-auto" id="sidenav-collapse-main">
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ url('dashboard') }}">
@@ -85,5 +85,59 @@
       </li>
 
     </ul>
-  </div>
+  </div> -->
+  <div class="collapse navbar-collapse  w-auto h-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            @foreach ($items as $item)
+                @php
+                    $url = $item->url ?? '#';
+                @endphp
+                @if (!$item->submodule->isEmpty())
+                    @php
+                        $combine_url = $item->submodule->pluck('url')->toArray();
+                    @endphp
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#{{ $item->url }}"
+                            class="nav-link {{ Request::is($combine_url) ? 'active' : '' }}" aria-controls="rq"
+                            role="button" aria-expanded="{{ Request::is($combine_url) ? 'true' : '' }}">
+                            <div
+                                class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i style="font-size: 1rem;"
+                                    class="fa fa-file-invoice ps-2 pe-2 text-center text-dark {{ Request::is($item->url) ? 'text-white' : 'text-dark' }} "
+                                    aria-hidden="true"></i>
+                            </div>
+                            <span class="nav-link-text ms-1">{{ $item->name }}</span>
+                        </a>
+                        <div class="collapse {{ Request::is($combine_url) ? 'show' : '' }}" id="{{ $item->url }}"
+                            style="">
+                            <ul class="nav ms-4 ps-3">
+                                @foreach ($item->submodule as $submodule)
+                                    <li class="nav-item ">
+                                        <a class="nav-link {{ Request::is($submodule->url) ? 'active' : '' }}"
+                                            href="{{ url($submodule->url) }}">
+                                            <span class="sidenav-normal"> {{ $submodule->name }}
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is($item->url) ? 'active' : '' }}"
+                            href="{{ url($item->url) }}">
+                            <div
+                                class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i style="font-size: 1rem;"
+                                    class="fa fa-id-badge ps-2 pe-2 text-center text-dark {{ Request::is($item->url) ? 'text-white' : 'text-dark' }} "
+                                    aria-hidden="true"></i>
+                            </div>
+                            <span class="nav-link-text ms-1">{{ $item->name }}</span>
+                        </a>
+                    </li>
+                @endif
+            @endforeach
+        </ul>
+    </div>
 </aside>
