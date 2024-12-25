@@ -125,6 +125,8 @@ Route::post('/add-cart', [MainController::class, 'add_cart'])->name('add_cart')-
 Route::post('/order-qty', [MainController::class, 'order_qty'])->name('order-qty');
 Route::post('/remove-order', [MainController::class, 'remove_order'])->name('remove-order');
 Route::get('/display-cart', [MainController::class, 'display_cart'])->name('display_cart');
+Route::get('/display-delivery', [MainController::class, 'display_delivery'])->name('display_delivery');
+
 
 Route::post('/update-cart-quantity', [MainController::class, 'updateQuantity'])->name('update-cart-quantity');
 Route::post('/remove-cart-item', [MainController::class, 'removeItem'])->name('remove-cart-item');
@@ -153,7 +155,7 @@ Route::get('/session', function () {
 	}
 
 	Session::flush();
-	session()->regenerate(); 
+	session()->regenerate();
 	return redirect()->route('login');
 });
 
