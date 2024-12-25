@@ -27,10 +27,13 @@ class MainController extends Controller
 
     public function main_menus()
     {
-
+        $payments = Payment::with(['paymentorder.order.menus'])
+        ->where('customer_id', auth()->user()->id)
+        ->orderBy('updated_at', 'desc')
+        ->get();    
         $category = Category::with('menus')->get();
         $carts = Order::all();
-        return view('main_menus', compact('category', 'carts'));
+        return view('main_menus', compact('category', 'carts', 'payments'));
     }
 
     public function add_cart(Request $request)
@@ -63,7 +66,7 @@ class MainController extends Controller
                 // Add to the existing order
                 $order->quantity += $quantity;
                 $order->subtotal += $menu->price * $quantity;
-                $order->discount += $menu->discount * $quantity;
+                $order->discount += ($menu->price*$menu->discount/100) * $quantity;
                 // Calculate the total discount (apply the discount to subtotal)
                 $order->total = $order->subtotal - $order->discount;
 
@@ -106,7 +109,7 @@ class MainController extends Controller
                 'quantity' => $quantity,
                 'price' => $menu->price,
                 'subtotal' => $menu->price * $quantity,
-                'discount' => $menu->discount * $quantity,
+                'discount' => ($menu->price*$menu->discount/100) * $quantity,
                 'total' => (($menu->price - ($menu->price * $menu->discount / 100)) * $quantity) + ($addonTotal * $quantity), // Add addon price to total
                 'status' => 0
             ]);
@@ -148,7 +151,6 @@ class MainController extends Controller
     }
     public function display_cart()
     {
-
         if (auth()->check() == true) {
             $cart = Order::with('menus', 'order_addons.menusAddon')
                 ->where('customer_id', auth()->user()->id)
@@ -193,7 +195,7 @@ class MainController extends Controller
         if ($cart) {
             $cart->quantity = $request->quantity;
             $cart->subtotal = $cart->price * $cart->quantity;
-            $cart->discount = $cart->menus->discount * $cart->quantity;
+            $cart->discount = ($cart->price * $cart->menus->discount/100) * $cart->quantity;
             $cart->total = ($cart->subtotal - $cart->discount) + ($addonTotal * $cart->quantity); // Add addon price to total
             $cart->save();
 
@@ -235,7 +237,8 @@ class MainController extends Controller
             'address2' => $request->address_2 ?? '',
             'address3' => $request->address_3 ?? '',
             'district' => $request->district ?? '',
-            'postcode' => $request->postcode ?? ''
+            'postcode' => $request->postcode ?? '',
+            'status' => 1
             // 'payment_img'
         ]);
         if ($request->hasFile('payment_receipt')) {
@@ -266,5 +269,29 @@ class MainController extends Controller
         if ($payment) {
             return view('payment_complete');
         }
+    }
+
+    public function display_delivery()
+    {
+
+        if (auth()->check() == true) {
+            $payment = Payment::with(['paymentorder.order.menus'])
+                ->where('customer_id', auth()->user()->id)
+                ->orderBy('id', 'asc')
+                ->get();
+            $paymentarray = [];
+            foreach ($payment as $paymentItem) { // Iterate over the collection of Payment models
+                foreach ($paymentItem->paymentorder as $paymentOrder) { // Iterate over the related PaymentOrder models
+                    $paymentarray[] = [
+                        'id' => $paymentItem->id,
+                        'menus' => $paymentOrder->order->menus->pluck('menus_name')->toArray(), // Collect menu names into an array
+                        'quantity' => $paymentOrder->order->quantity,
+                        'orderstatus' => $paymentOrder->order->status,
+                        'updated_at' => $paymentItem->update_at
+                    ];
+                }
+            }
+        }
+        return response()->json($paymentarray);
     }
 }
