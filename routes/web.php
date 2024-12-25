@@ -94,7 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/update-complete-order-management', [OrderController::class, 'update_complete_order_management'])->name('update-complete-order-management');
 
 	Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting-index');
-	Route::get('/reporting-datatable', [ReportingController::class, 'reporting_datatable'])->name('reporting_datatable');
+	Route::get('/reporting-receipt', [ReportingController::class, 'reporting_receipt'])->name('reporting_receipt');
 
 
 	Route::get('tables', function () {

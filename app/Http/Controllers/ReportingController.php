@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Payment;
 use Yajra\DataTables\Facades\DataTables;
 
 class ReportingController extends Controller
@@ -13,6 +14,7 @@ class ReportingController extends Controller
 
         $month = request('month') ?? date('m');
         $year = request('year') ?? date('Y');
+        $status = request('status') ?? 'All';
 
         $listOfMonth = [
             '01' => 'January',
@@ -35,59 +37,22 @@ class ReportingController extends Controller
         }
 
 
-        return view('pages/report-management', compact('listOfMonth', 'listOfYear', 'month', 'year'));
+        $orders = Payment::with('paymentorder.order.menus','users')
+        ->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
+        if($status !='All'){
+            $orders = $orders->where('status',$status);
+        }
+        $orders =  $orders->orderBy('id', 'desc')->get();
+
+        return view('pages/report-management', compact('orders','listOfMonth','listOfYear','month','year','status'));
     }
 
 
-    public function reporting_datatable(Request $request)
-    {   $month = request('month') ?? date('m');
-        $year = request('year') ?? date('Y');
-        $status = request('status');
-        if ($request->ajax()) {
-            $orders = Order::with(['users', 'menus', 'addOn.menusAddon'])
-            ->whereMonth('created_at', $month)
-                ->whereYear('created_at', $year);
-                if($status !='All'){
-                    $orders->where('status',$status);
-                }
-
-                $orders =  $orders->get();
-
-
-            return Datatables::of($orders)
-                ->addIndexColumn()
-                ->addColumn('addon_names', function ($order) {
-                    return $order->addOn && $order->addOn->isNotEmpty()
-                        ? $order->addOn->map(fn($addon) => $addon->menusAddon->name)->join(', ')
-                        : '';
-                })
-                ->addColumn('status_label', function ($order) {
-                    $statuses = [
-                        0 => 'Cart',
-                        1 => 'New Order',
-                        2 => 'Preparing',
-                        3 => 'Delivered',
-                        4 => 'Pickup',
-                    ];
-
-                    return $statuses[$order->status] ?? 'Unknown';
-                })
-                ->addColumn('price_formatted', function ($order) {
-                    return number_format($order->price, 2); // Format unit price to 2 decimal places
-                })
-                ->addColumn('subtotal_formatted', function ($order) {
-                    return number_format($order->subtotal, 2); // Format subtotal to 2 decimal places
-                })
-                ->addColumn('created_at_formatted', function ($order) {
-                    return $order->created_at->format('d-M-Y');
-                })
-                ->addColumn('updated_at_formatted', function ($order) {
-                    return $order->updated_at->format('d-M-Y');
-                })
-                ->rawColumns(['addon_names', 'status_label'])
-                ->make(true);
-        }
-
-        return view('reporting.index');
+    public function reporting_receipt(Request $request)
+    {  
+        $order = Payment::with('paymentorder.order.menus','paymentorder.order.addOn.menusAddon','users')->where('id', $request->id)->first();
+       
+        return view('pages.report-details',compact('order'));
     }
 }
