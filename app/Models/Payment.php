@@ -18,7 +18,10 @@ class Payment extends Model
         'address3',
         'district',
         'postcode',
-        'payment_img'
+        'payment_img',
+        'status',
+        'updated_by',
+        'deliver_by'
     ];
     use HasFactory;
 
