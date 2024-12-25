@@ -11,10 +11,14 @@ class Payment extends Model
     protected $fillable =
     [
         'customer_id',
-        'method',
+        'method_delivery',
+        'method_payment',
         'address1',
         'address2',
         'address3',
+        'district',
+        'postcode',
+        'payment_img'
     ];
     use HasFactory;
 
