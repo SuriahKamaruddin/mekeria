@@ -55,6 +55,8 @@ class MenusController extends Controller
                 'discount' => $request->discount ?? 0,
                 'is_addon' => $request->is_addon,
             ]);
+            
+            $menusId = $menus->id;
             if ($request->hasFile('menus_img')) {
                 $attachment = $request->file('menus_img');
                 $att_name = $attachment->getClientOriginalName();
@@ -63,18 +65,22 @@ class MenusController extends Controller
                 $fileNameToStore = $filename . '_' . rand() . '.' . $extension;
                 $path = $attachment->move(storage_path('app/public/mekeria/menus'), $fileNameToStore);
 
-                $menus = Menus::where('id', $menus->id)->update([
+                $menus = Menus::where('id', $menusId)->update([
                     'menus_img' => $fileNameToStore,
                 ]);
             };
             if($request->is_addon == 1){
                 if ($request->has('addonCheckbox')) {
-                    $menusAddonMap = MenusAddonMaps::where('menus_id', $menus->id)->delete();
+                    $menusAddonMap = MenusAddonMaps::where('menus_id', $menusId)->first();
+
+                    if ($menusAddonMap) {
+                        $menusAddonMap->delete();
+                    }
                     $addonIds = $request->addonCheckbox; // Array of selected add-on IDs
     
                     foreach ($addonIds as $addonId) {
                         $menusAddonMap = MenusAddonMaps::firstOrCreate([
-                            'menus_id' => $menus->id,
+                            'menus_id' => $menusId,
                             'menus_addon_id' => $addonId,
                         ]);
                     }
@@ -122,6 +128,14 @@ class MenusController extends Controller
                             'menus_id' => $id,
                             'menus_addon_id' => $addonId,
                         ]);
+                    }
+                }else{
+                    $menusAddonMap = MenusAddonMaps::where('menus_id', $id)->get();
+
+                    if ($menusAddonMap) {
+                        foreach ($menusAddonMap as $menusAddonMap) {
+                            $menusAddonMap->delete();
+                        }
                     }
                 }
             }else{
