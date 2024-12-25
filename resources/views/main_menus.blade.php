@@ -57,7 +57,7 @@
             z-index: 1000;
         }
 
-        .cart-sidebar {
+        .cart-sidebar, .delivery-sidebar {
             position: fixed;
             top: 0;
             right: -400px;
@@ -75,29 +75,29 @@
             /* Prevent horizontal scrolling */
         }
 
-        .cart-sidebar::-webkit-scrollbar {
+        .cart-sidebar::-webkit-scrollbar, .delivery-sidebar::-webkit-scrollbar {
             width: 8px;
         }
 
-        .cart-sidebar::-webkit-scrollbar-thumb {
+        .cart-sidebar::-webkit-scrollbar-thumb, .delivery-sidebar::-webkit-scrollbar-thumb {
             background-color: #aaa;
             border-radius: 4px;
         }
 
-        .cart-sidebar::-webkit-scrollbar-thumb:hover {
+        .cart-sidebar::-webkit-scrollbar-thumb:hover, .delivery-sidebar::-webkit-scrollbar-thumb:hover {
             background-color: #888;
         }
 
-        .cart-sidebar::-webkit-scrollbar-track {
+        .cart-sidebar::-webkit-scrollbar-track, .delivery-sidebar::-webkit-scrollbar-track {
             background-color: #f0f0f0;
         }
 
-        .cart-sidebar.open {
+        .cart-sidebar.open, .delivery-sidebar.open {
             right: 0;
             /* Slide in */
         }
 
-        .cart-header {
+        .cart-header, .delivery-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -106,12 +106,12 @@
             color: white;
         }
 
-        .cart-header h2 {
+        .cart-header, .delivery-header h2 {
             /* font-size: 16px;  */
             margin: 0;
         }
 
-        .close-btn {
+        .close-btn, .delivery-close-btn {
             background: none;
             border: none;
             color: white;
@@ -119,11 +119,11 @@
             cursor: pointer;
         }
 
-        .close-btn:hover {
+        .close-btn:hover ,.delivery-close-btn:hover{
             color: #ff5c5c;
         }
 
-        .cart-content {
+        .cart-content, .delivery-content {
             padding: 20px;
             color: #333;
             font-size: 16px;
@@ -193,7 +193,7 @@
                             <strong class="text-light"> {{auth()->user()->name}}</strong>
                             @else<strong class="text-light">Guest</strong> @endif
                             <a href="@if (auth()->check() == true) {{ url('/logout') }}@else{{ url('/login') }} @endif"
-                                class="user_link">
+                                class="user_link" id="logout-link">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
 
@@ -202,16 +202,17 @@
                                     style="enable-background:new 0 0 456.029 456.029;">
                                     <g>
                                         <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-               c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                                            c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
                                         <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-               C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-               c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-               C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                                            C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                                            c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                                            C457.728,97.71,450.56,86.958,439.296,84.91z" />
                                         <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-               c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                                            c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
                                     </g>
                                 </svg>
                             </a>
+                            
                             <div class="cart-sidebar" id="cart-sidebar">
                                 <div class="cart-header">
                                     <h2>Your Cart</h2>
@@ -219,6 +220,151 @@
                                 </div>
                                 <div class="card mb-3" style="max-width: 540px;">
                                     <div id="cartContainer" class="cart-content row g-0">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <a class="delivery_link" id="delivery-trigger">
+                                <i class="fa fa-truck" aria-hidden="true" style="color:#f0f0f0"></i>
+                            </a>
+
+                            <div class="delivery-sidebar" id="delivery-sidebar">
+                                <div class="delivery-header">
+                                    <h2>Delivery & History</h2>
+                                    <button class="delivery-close-btn" id="delivery-close-cart">&times;</button>
+                                </div>
+                                <div class="card mb-3" style="max-width: 540px;">
+                                    <div id="deliveryContainer" class="delivery-content row g-0">
+                                        @if ($payments->count() > 0)
+                                        <div class="card-body">
+                                            @foreach ($payments as $payment)            
+                                            <div class="card text-dark mb-3 shadow  border border-warning">
+                                                <div class="card-header border border-warning" style="background-color:rgb(255, 246, 236);">Payment No: #{{ $payment->id }}</div>
+                                                <div class="card-body d-flex flex-column">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <p class="card-text"><small class="text-muted">Date:</small>
+                                                                {{$payment->created_at->format('Y-m-d')}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <p class="card-text"><small class="text-muted">Status:</small>
+                                                                @if ($payment->status == 1)
+                                                                    Order Confirmed
+                                                                @elseif($payment->status == 2){
+                                                                    Order is preparing by staff
+                                                                }
+                                                                @elseif($payment->status == 3){
+                                                                    On Deliver by rider
+                                                                }@elseif($payment->status == 4){
+                                                                    Completed
+                                                                }
+                                                                @else
+                                                                    Order Confirmed
+                                                                @endif
+                                                            </p>
+                                                        </div>
+                                                    </div>                             
+                                                </div>
+
+                                                    {{-- <div class="row">
+                                                        <div class="col-2">
+                                                         <p class="card-text"><small class="text-muted">Name</small></p>
+                                                        </div>
+                                                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->users->name}} ({{$order->users->email}})</small></p> 
+                                                        </div>
+                                                        <div class="col-2">
+                                                         <p class="card-text"><small class="text-muted">Pickup/Delivery</small></p>
+                                                        </div>
+                                                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">@if($order->method_delivery == 1) Pickup at store @else Delivery @endif</small></p> 
+                                                        </div>
+                                                        @if($order->method_delivery == 2) 
+                                                        <div class="col-2">
+                                                         <p class="card-text"><small class="text-muted">Address</small></p>
+                                                        </div>
+                                                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->address1}} {{$order->address2}} {{$order->address2}}</small></p> 
+                                                        </div>
+                                                        <div class="col-2">
+                                                         <p class="card-text"><small class="text-muted">Payment Method</small></p>
+                                                        </div>
+                                                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">@if($order->method_payment == 1) Online @else QR Code @endif</small></p> 
+                                                        </div>
+                                                        @endif
+                                                        <div class="col-2">
+                                                         <p class="card-text"><small class="text-muted">Order at</small></p>
+                                                        </div>
+                                                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{ $order->created_at->format('d-m-Y H:m A') }}</small></p> 
+                                                        </div>
+                                                    </div> --}}
+                                                    <div class="d-flex align-items-center">
+                                                        <hr class="flex-grow-1">
+                                                        <span class="mx-2">Item Details</span>
+                                                        <hr class="flex-grow-1">
+                                                    </div>
+                                                    <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Menus</th>
+                                                            <th scope="col">Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($payment->paymentorder as $paymentorder)
+                                                        <tr>
+                                                            <th scope="row">
+                                                                {{$loop->iteration}}</th>
+                                                            <th scope="row">
+                                                                {{$paymentorder->order->menus->menus_name}}
+                                                            </th>
+                                                            <th scope="row">
+                                                                {{$paymentorder->order->quantity}}
+                                                            </th>
+                                                        </tr>     
+                                                        @endforeach
+                                                    </tbody>
+                                                    <tfoot></tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                            {{-- @foreach($payments as $payment)
+                                                <div class="card mb-3" style="max-width: 540px;">
+                                                    <div class="row g-0">
+                                                        <div class="col-md-12">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">Payment No: #{{$payment->id}}</h5>
+                                                                <table class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">No</th>
+                                                                            <th scope="col">Menus</th>
+                                                                            <th scope="col" style="width: 60px;">Quantity</th>  <!-- Adjust the width here -->
+                                                                            <th scope="col">Status</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($payment->paymentorder as $paymentorder)
+                                                                        <tr>
+                                                                            <th>{{ $loop->iteration }}</th>
+                                                                            <th>{{ $paymentorder->order->menus->menus_name }}</th>
+                                                                            <th>{{ $paymentorder->order->quantity }}</th>
+                                                                            <th>{{ $loop->iteration }}</th>
+                                                                        </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach --}}
+                                        @else
+                                            <h5 class="card-title">No records</h5>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -396,10 +542,10 @@
     <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
     <script src="{{ asset('assets/guest_assets/js/custom.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             displayCart();
-
 
         // Check session status every 60 seconds
         const sessionCheckInterval = 60000; // 60 seconds
@@ -422,9 +568,6 @@
                 }
             });
         }, sessionCheckInterval);
- 
-
-
             $(".add-to-cart").on("click", function(e) {
                 const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === 'true';
 
@@ -555,7 +698,24 @@
                 }
             });
 
+            $("#delivery-trigger").on("click", function() {
+                $("#delivery-sidebar").addClass("open");
+            });
 
+            // Close the cart sidebar when the close button is clicked
+            $("#delivery-close-cart").on("click", function() {
+                $("#delivery-sidebar").removeClass("open");
+            });
+
+            // Close the sidebar when clicking outside
+            $(document).on("click", function(e) {
+                if (
+                    !$(e.target).closest("#delivery-sidebar").length &&
+                    !$(e.target).closest("#delivery-trigger").length
+                ) {
+                    $("#delivery-sidebar").removeClass("open");
+                }
+            });
         });
 
         function displayCart() {
@@ -721,6 +881,30 @@
                 }
             });
         }
+
+        $(document).ready(function () {
+            $('#logout-link').on('click', function (e) {
+                e.preventDefault(); // Prevent default link behavior
+                const targetUrl = $(this).data('url'); // Get the URL from data attribute
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You will be logged out of your account.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, log me out!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to the dynamic URL
+                        window.location.href = "{{ url('/logout') }}";
+                    }
+                });
+            });
+        });
+
     </script>
 </body>
 
