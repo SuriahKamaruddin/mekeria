@@ -87,9 +87,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 	//order management
 	Route::get('/order-management', [OrderController::class, 'index'])->name('order-management-index');
+	Route::get('/history-management', [OrderController::class, 'history_index'])->name('history-management-index');
 	Route::get('/view-order-management', [OrderController::class, 'view_details'])->name('view-order-management');
 	Route::get('/update-prepare-order-management', [OrderController::class, 'update_prepare_order_management'])->name('update-prepare-order-management');
 	Route::get('/update-deliver-order-management', [OrderController::class, 'update_deliver_order_management'])->name('update-deliver-order-management');
+	Route::get('/update-complete-order-management', [OrderController::class, 'update_complete_order_management'])->name('update-complete-order-management');
 
 	Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting-index');
 	Route::get('/reporting-datatable', [ReportingController::class, 'reporting_datatable'])->name('reporting_datatable');
