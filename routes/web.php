@@ -60,8 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/add-user-management', [UserManagement::class, 'add_user_management'])->name('add-user-management');
 	Route::post('/insert-user-management', [UserManagement::class, 'insert_user_management'])->name('insert-user-management');
 	Route::get('/delete-user-management', [UserManagement::class, 'delete_user_management'])->name('delete-user-management');
-
+	
 	////Customer Register
+	Route::get('/customer-management', [UserManagement::class, 'customer_index'])->name('customer-index');
 	Route::post('/add-customer-user-management', [UserManagement::class, 'add_customer_user_management'])->name('add-customer-user-management');
 
 

@@ -14,7 +14,7 @@ class UserManagement extends Controller
 {
     public function index()
     {
-        $users = User::with('role')->get();
+        $users = User::with('role')->where('role_code', '!=', 'C')->get();
         return view('pages.user-management', compact('users'));
     }
     public function add_user_management(Request $request){
@@ -110,5 +110,11 @@ class UserManagement extends Controller
             $message = 'Failed to delete user. Please try again later.';
             return redirect()->route('user-index')->with('error', $message);
         }
+    }
+
+    public function customer_index()
+    {
+        $users = User::with('role')->where('role_code', '=', 'C')->get();
+        return view('pages.customer-management', compact('users'));
     }
 }
