@@ -56,8 +56,7 @@
             right: 20px;
             z-index: 1000;
         }
-
-        .cart-sidebar {
+        .cart-sidebar, .delivery-sidebar {
             position: fixed;
             top: 0;
             right: -400px;
@@ -75,29 +74,29 @@
             /* Prevent horizontal scrolling */
         }
 
-        .cart-sidebar::-webkit-scrollbar {
+        .cart-sidebar::-webkit-scrollbar, .delivery-sidebar::-webkit-scrollbar {
             width: 8px;
         }
 
-        .cart-sidebar::-webkit-scrollbar-thumb {
+        .cart-sidebar::-webkit-scrollbar-thumb, .delivery-sidebar::-webkit-scrollbar-thumb {
             background-color: #aaa;
             border-radius: 4px;
         }
 
-        .cart-sidebar::-webkit-scrollbar-thumb:hover {
+        .cart-sidebar::-webkit-scrollbar-thumb:hover, .delivery-sidebar::-webkit-scrollbar-thumb:hover {
             background-color: #888;
         }
 
-        .cart-sidebar::-webkit-scrollbar-track {
+        .cart-sidebar::-webkit-scrollbar-track, .delivery-sidebar::-webkit-scrollbar-track {
             background-color: #f0f0f0;
         }
 
-        .cart-sidebar.open {
+        .cart-sidebar.open, .delivery-sidebar.open {
             right: 0;
             /* Slide in */
         }
 
-        .cart-header {
+        .cart-header, .delivery-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -106,12 +105,12 @@
             color: white;
         }
 
-        .cart-header h2 {
+        .cart-header, .delivery-header h2 {
             /* font-size: 16px;  */
             margin: 0;
         }
 
-        .close-btn {
+        .close-btn, .delivery-close-btn {
             background: none;
             border: none;
             color: white;
@@ -119,11 +118,11 @@
             cursor: pointer;
         }
 
-        .close-btn:hover {
+        .close-btn:hover ,.delivery-close-btn:hover{
             color: #ff5c5c;
         }
 
-        .cart-content {
+        .cart-content, .delivery-content {
             padding: 20px;
             color: #333;
             font-size: 16px;
@@ -227,10 +226,10 @@
                             <strong class="text-light"> {{auth()->user()->name}}</strong>
                             @else<strong class="text-light">Guest</strong> @endif
                             <a href="@if (auth()->check() == true) {{ url('/logout') }}@else{{ url('/login') }} @endif"
-                                class="user_link">
+                                class="user_link" id="logout-link">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
-                            <a class="cart_link" href="#">
+                            <a class="cart_link" id="cart-trigger">
                                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                                     xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                     viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;"
@@ -255,39 +254,101 @@
                    c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
                                         </g>
                                     </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
-                                    <g>
-                                    </g>
+                                    
                                 </svg>
                             </a>
+                            <div class="cart-sidebar" id="cart-sidebar">
+                                <div class="cart-header">
+                                    <h2>Your Cart</h2>
+                                    <button class="close-btn" id="close-cart">&times;</button>
+                                </div>
+                                <div class="card mb-3" style="max-width: 540px;">
+                                    <div id="cartContainer" class="cart-content row g-0">
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="delivery_link" id="delivery-trigger">
+                                <i class="fa fa-truck" aria-hidden="true" style="color:#f0f0f0"></i>
+                            </a>
 
+                            <div class="delivery-sidebar" id="delivery-sidebar">
+                                <div class="delivery-header">
+                                    <h2>Delivery & History</h2>
+                                    <button class="delivery-close-btn" id="delivery-close-cart">&times;</button>
+                                </div>
+                                <div class="card mb-3" style="max-width: 540px;">
+                                    <div id="deliveryContainer" class="delivery-content row g-0">
+                                        @if ($payments->count() > 0)
+                                        <div class="card-body">
+                                            @foreach ($payments as $payment)            
+                                            <div class="card text-dark mb-3 shadow  border border-warning">
+                                                <div class="card-header border border-warning" style="background-color:rgb(255, 246, 236);">Payment No: #{{ $payment->id }}</div>
+                                                <div class="card-body d-flex flex-column">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <p class="card-text"><small class="text-muted">Date:</small>
+                                                                {{$payment->created_at->format('Y-m-d')}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <p class="card-text"><small class="text-muted">Status:</small>
+                                                                @if ($payment->status == 1)
+                                                                    Order Confirmed
+                                                                @elseif($payment->status == 2){
+                                                                    Order is preparing by staff
+                                                                }
+                                                                @elseif($payment->status == 3){
+                                                                    On Deliver by rider
+                                                                }@elseif($payment->status == 4){
+                                                                    Completed
+                                                                }
+                                                                @else
+                                                                    Order Confirmed
+                                                                @endif
+                                                            </p>
+                                                        </div>
+                                                    </div>                             
+                                                </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <hr class="flex-grow-1">
+                                                        <span class="mx-2">Item Details</span>
+                                                        <hr class="flex-grow-1">
+                                                    </div>
+                                                    <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Menus</th>
+                                                            <th scope="col">Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($payment->paymentorder as $paymentorder)
+                                                        <tr>
+                                                            <th scope="row">
+                                                                {{$loop->iteration}}</th>
+                                                            <th scope="row">
+                                                                {{$paymentorder->order->menus->menus_name}}
+                                                            </th>
+                                                            <th scope="row">
+                                                                {{$paymentorder->order->quantity}}
+                                                            </th>
+                                                        </tr>     
+                                                        @endforeach
+                                                    </tbody>
+                                                    <tfoot></tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        @else
+                                            <h5 class="card-title">No records</h5>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -347,8 +408,14 @@
                                     <h6>
                                         <span>{{ $salesItem->discount ?? 0 }}%</span> Off
                                     </h6>
-                                    <a href="">
-                                        Order Now <svg version="1.1" id="Capa_1"
+                                    <a class="add-to-cart" data-id="{{ $salesItem->id }}"
+                                        data-name="{{ $salesItem->menus_name }}"
+                                        data-description="{{ $salesItem->menus_description }}"
+                                        data-price="{{ $salesItem->menus_price }}"
+                                        data-image="{{ $salesItem->menus_img }}"
+                                        data-addons="{{ json_encode($salesItem->menus_addons) }}">
+                                        Order Now 
+                                        <svg version="1.1" id="Capa_1"
                                             xmlns="http://www.w3.org/2000/svg"
                                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                             viewBox="0 0 456.029 456.029"
@@ -356,21 +423,21 @@
                                             <g>
                                                 <g>
                                                     <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                                                </g>
-                                            </g>
-                                            <g>
-                                                <g>
-                                                    <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                     C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                                                </g>
-                                            </g>
-                                            <g>
-                                                <g>
-                                                    <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                                        c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <g>
+                                                                        <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                                        C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                                        c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                                        C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <g>
+                                                                        <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                                        c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
                                                 </g>
                                             </g>
                                             <g>
@@ -414,6 +481,23 @@
         </div>
     </section>
 
+
+    <div class="modal fade" id="cart-modal" tabindex="-1" aria-labelledby="cart-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-orange text-light">
+                    <h5 class="modal-title" id="cart-modalLabel">Add to cart</h5>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-btn" type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button id="add-btn" type="button" class="btn button-orange" data-id="">Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- end offer section -->
 
     <!-- food section -->
@@ -427,16 +511,15 @@
             </div>
 
             <ul class="filters_menu">
-                <li class="active" data-filter="*">All</li>
                 @foreach ($category as $cat)
-                    <li data-filter=".cat_{{ e($cat->id) }}">{{ $cat->category_name }}</li>
+                    <li data-filter=".cat_{{ e($cat->id) }}" class="{{ $loop->first ? 'active' : '' }}">{{ $cat->category_name }}</li>
                 @endforeach
             </ul>
 
             <div class="filters-content">
                 <div class="row grid">
                     @foreach ($category as $cat)
-                        @foreach ($cat->menus as $menu)
+                        @foreach ($cat->menus->take(5) as $menu)
                             <div class="col-sm-6 col-lg-4 all cat_{{ e($menu->category_id) }}">
                                 <div class="box">
                                     <div>
@@ -572,6 +655,393 @@
     <script src="{{ asset('assets/guest_assets/js/custom.js') }}"></script>
     <!-- Google Map -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            displayCart();
+
+        // Check session status every 60 seconds
+        const sessionCheckInterval = 60000; // 60 seconds
+
+        setInterval(function () {
+            $.ajax({
+                url: "{{ route('session.check') }}",
+                type: "GET",
+                success: function (response) {
+                    if (response.status === 'inactive') {
+                        // Optional: Handle inactive session if the API provides such info
+                        console.log("Session is still active.");
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        // Redirect to the login page if the session has expired
+                        window.location.href = "{{ route('destroy') }}";
+                    }
+                }
+            });
+        }, sessionCheckInterval);
+            $(".add-to-cart").on("click", function(e) {
+                const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === 'true';
+
+                if (!isLoggedIn) {
+                    e.preventDefault();
+                    window.location.href = "/login";
+                    return false;
+                }
+
+                const id = $(this).data("id");
+                const name = $(this).data("name");
+                const price = $(this).data("price");
+                const img = $(this).data("image");
+                const description = $(this).data("description");
+
+                const imgPath = `/storage/mekeria/menus/${img}`;
+
+                const addons = $(this).data("addons");
+                $(".modal-body").empty();
+
+                let addonsHeaderhtml = '';
+                let addonshtml = '';
+                if (addons.length > 0) {
+
+                    addons.forEach(addon => {
+                        addonshtml += `
+                        <input class="form-check-input addon-check" type="checkbox" value="${addon.id}" id="addon-${addon.id}">
+                        <label class="form-check-label" for="addon-${addon.id}">${addon.name}</label>
+                        `;
+                    });
+                    addonsHeaderhtml = `
+                    <li class="list-group-item">
+                        <h6 class="card-title">Choose any add-ons</h6>
+                        <div class="form-check">
+                            ${addonshtml}
+                        </div>
+                    </li>
+                    `;
+                }
+                //console.log(addonshtml);
+
+                const value = `
+                <div class="card">
+                    <img src="${imgPath}" class="card-img-top" style="height: 30vh; object-fit: cover;" alt="${name}">
+                    <div class="card-body">
+                    <h5 class="card-title">${name}</h5>
+                    <p class="card-text">
+                    ${description}
+                    </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                    ${addonsHeaderhtml}
+                    <li class="list-group-item">
+                        <h6 class="card-title">Quantity</h6>
+                        <input type="hidden" name="id-${id}" id="id-${id}">
+                        <input style="width: 50%;" type="number" id="quantity-${id}" class="form-control" placeholder="Enter quantity" value="1" min="1" max="100">
+                    </li>
+                    </ul>
+                </div>
+                `;
+
+                // Set modal content
+                $(".modal-body").append(value);
+                $("#cart-modalLabel").text(`Add to Cart - ${name}`); // Set modal title dynamically
+
+                $('#add-btn').data('id', id);
+                $("#cart-modal").modal("show");
+
+                $('#cancel-btn').click(function() {
+                    $('#cart-modal').modal('hide');
+                });
+            });
+
+            $('#add-btn').click(function() {
+                const id = $(this).data('id');
+                const quantity = $(`#quantity-${id}`).val();
+
+                const addons = [];
+                $("input.addon-check:checked").each(function() {
+                    // Push the value of each checked checkbox into the addons array
+                    addons.push($(this).val());
+                });
+
+
+                // Send data to the controller via AJAX
+                $.ajax({
+                    url: "{{ route('add_cart') }}",
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: id,
+                        quantity: quantity,
+                        addons: addons
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#cart-modal').modal('hide');
+                            $("#cart-sidebar").addClass("open");
+                            displayCart();
+                        } else {
+                            alert('There was an issue adding the item to the cart.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error:', error);
+                        alert('There was an error processing your request.');
+                    }
+                });
+            });
+
+
+            $("#cart-trigger").on("click", function() {
+                $("#cart-sidebar").addClass("open");
+            });
+
+            // Close the cart sidebar when the close button is clicked
+            $("#close-cart").on("click", function() {
+                $("#cart-sidebar").removeClass("open");
+            });
+
+            // Close the sidebar when clicking outside
+            $(document).on("click", function(e) {
+                if (
+                    !$(e.target).closest("#cart-sidebar").length &&
+                    !$(e.target).closest("#cart-trigger").length
+                ) {
+                    $("#cart-sidebar").removeClass("open");
+                }
+            });
+
+            $("#delivery-trigger").on("click", function() {
+                $("#delivery-sidebar").addClass("open");
+            });
+
+            // Close the cart sidebar when the close button is clicked
+            $("#delivery-close-cart").on("click", function() {
+                $("#delivery-sidebar").removeClass("open");
+            });
+
+            // Close the sidebar when clicking outside
+            $(document).on("click", function(e) {
+                if (
+                    !$(e.target).closest("#delivery-sidebar").length &&
+                    !$(e.target).closest("#delivery-trigger").length
+                ) {
+                    $("#delivery-sidebar").removeClass("open");
+                }
+            });
+        });
+
+        function displayCart() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('display_cart') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    
+                    // Clear the cart container
+                    $('#cartContainer').html('');
+                    if (Array.isArray(response) && response.length !== 0) {
+                        response.forEach(cart => {
+                            let addOnsHtml = '';
+                            cart.add_ons.forEach(addon => {
+                                addOnsHtml += `
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0"><small class="text-muted">${addon.name}</small></p>
+                                <p class="mb-0 text-end"><small class="text-muted">RM ${addon.price*cart.quantity}</small></p>
+                            </div>`;
+                            });
+
+                            let cartItemHtml = `
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="/storage/mekeria/menus/${cart.menus_img}" class="img-fluid rounded-start" alt="${cart.menus}">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${cart.menus}</h5>
+                                        <div class="input-group input-group-sm mb-3">
+                                            <button class="btn btn-secondary button-minuscart" type="button" data-id="${cart.id}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="12" width="10.5" viewBox="0 0 448 512">
+                                                    <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>
+                                                </svg>
+                                            </button>
+                                            <input id="cartqty${cart.id}" type="number" width="50%" class="form-control" value="${cart.quantity}">
+                                            <button class="btn btn-secondary button-pluscart" type="button" data-id="${cart.id}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="12" width="10.5" viewBox="0 0 448 512">
+                                                    <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0"><small class="text-muted">Unit Price</small></p>
+                                            <p class="mb-0 text-end"><small class="text-muted">RM ${cart.price}</small></p>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0"><small class="text-muted">Subtotal</small></p>
+                                            <p class="mb-0 text-end"><small class="text-muted">RM ${cart.subtotal}</small></p>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0"><small class="text-muted">Discount</small></p>
+                                            <p class="mb-0 text-end"><small class="text-muted">-RM ${cart.discount}</small></p>
+                                        </div>
+                                        ${addOnsHtml}
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0"><small class="text-bold">Total</small></p>
+                                            <p class="mb-0 text-end"><small class="text-bold">RM ${cart.total}</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                            // Append to cart container
+                            $('#cartContainer').append(cartItemHtml);
+                        });
+                        let checkout_button = `<div class=" d-flex justify-content-start col-md-12">
+                                                    <a href="{{ route('add-payment') }}" class="btn btn-success">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="12"
+                                                            width="13.5" viewBox="0 0 576 512">
+                                                            <path
+                                                                d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                                                        </svg>
+                                                        Checkout</a>
+                                                </div>`;
+
+                        $('#cartContainer').append(checkout_button);
+                    }else{
+
+                        $('#cartContainer').append('Cart is empty');
+                    }
+
+
+                },
+                error: function() {
+                    $('#cartContainer').append('Cart is empty');
+                }
+            });
+        }
+
+        $(document).on('click', '.button-pluscart', function() {
+            const cartId = $(this).data('id'); // Get cart ID
+            const quantityInput = $(`#cartqty${cartId}`); // Reference the input field
+            let currentQuantity = parseInt(quantityInput.val(), 10); // Get current quantity
+
+            // Increase the quantity
+            currentQuantity += 1;
+            quantityInput.val(currentQuantity); // Update the input field
+
+            // Call backend to update the quantity
+            updateCartQuantity(cartId, currentQuantity);
+        });
+
+        // Handle the "minus" button click
+        $(document).on('click', '.button-minuscart', function() {
+            const cartId = $(this).data('id'); // Get cart ID
+            const quantityInput = $(`#cartqty${cartId}`); // Reference the input field
+            let currentQuantity = parseInt(quantityInput.val(), 10); // Get current quantity
+
+            if (currentQuantity > 0) {
+                currentQuantity -= 1; // Decrease the quantity
+                quantityInput.val(currentQuantity); // Update the input field
+
+                // If quantity becomes 0, remove the cart item
+                if (currentQuantity === 0) {
+                    removeCartItem(cartId);
+                } else {
+                    // Call backend to update the quantity
+                    updateCartQuantity(cartId, currentQuantity);
+                }
+            }
+        });
+
+        // Function to update cart quantity via AJAX
+        function updateCartQuantity(cartId, quantity) {
+            $.ajax({
+                type: "POST",
+                url: "/update-cart-quantity", // Backend endpoint to update the quantity
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    cart_id: cartId,
+                    quantity: quantity
+                },
+                success: function(response) {
+                    displayCart();
+                },
+                error: function() {
+                    alert('Failed to update quantity.');
+                }
+            });
+        }
+
+        function removeCartItem(cartId) {
+            $.ajax({
+                type: "POST",
+                url: "/remove-cart-item", // Backend endpoint to remove the cart item
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    cart_id: cartId
+                },
+                success: function(response) {
+                    $(`#cartqty${cartId}`).closest('.card').remove(); // Remove the card from UI
+                    displayCart();
+                },
+                error: function() {
+                    alert('Failed to remove item.');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#logout-link').on('click', function (e) {
+                e.preventDefault(); // Prevent default link behavior
+                const targetUrl = $(this).data('url'); // Get the URL from data attribute
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You will be logged out of your account.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, log me out!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to the dynamic URL
+                        window.location.href = "{{ url('/logout') }}";
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            // Handle category filtering
+            $('.filters_menu li').click(function () {
+                // Remove 'active' class from all filters and add to the clicked one
+                $('.filters_menu li').removeClass('active');
+                $(this).addClass('active');
+
+                // Get the selected filter class
+                const filterClass = $(this).data('filter');
+
+                // Show/hide menu items based on the selected category
+                if (filterClass === 'all') {
+                    $('.filters-content .all').fadeIn();
+                } else {
+                    $('.filters-content .all').hide();
+                    $(`.filters-content ${filterClass}`).fadeIn();
+                }
+            });
+
+            // Trigger click on the first category to display its menus by default
+            $('.filters_menu li:first-child').click();
+        });
     </script>
     <!-- End Google Map -->
 </body>

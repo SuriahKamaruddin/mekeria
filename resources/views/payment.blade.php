@@ -180,61 +180,69 @@
 
                                     <hr>
                                     <p>Order Items</p>
-                                    <table id="orderTable2" class="table table-bordered pt-2">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
-                                                <th>Name</th>
-                                                <th>Quantity</th>
-                                                <th>Discount</th>
-                                                <th>Sub Total</th>
-                                                <th>Addon Detail</th>
-                                                <th>Total</th>
-                                            </tr>
-                                            @foreach ($orders as $order)
-                                                <tr>
-                                                    <th>{{ $loop->iteration }} </th>
-                                                    <th>{{$order->menus->menus_name}}</th>
-                                                    <th>{{$order->quantity}}</th>
-                                                    <th>
-                                                        @if ($order->discount >= 1)
-                                                        -RM {{number_format($order->discount, 2)}}    
-                                                        @else
-                                                        RM {{number_format(0, 2)}}
-                                                        @endif
-                                                    </th>
-                                                    <th>RM {{number_format($order->subtotal, 2)}}</th>
-                                                    <th>
-                                                        @if ($order->order_addons->count() >= 1)
-                                                        <table id="remarkstable" class="table table-bordered">
-                                                            <thead>
-                                                                @foreach ($order->order_addons as $addon)
-                                                                <tr>
-                                                                    <th>{{ $loop->iteration }}</th>
-                                                                    <th>{{ $addon->menusAddon->name }}</th>
-                                                                    <th>RM {{ number_format(($addon->menusAddon->price * $order->quantity), 2) }}</th>
-                                                                </tr>
-                                                                @endforeach
-                                                            </thead>
-                                                        </table>
-                                                        @endif
-                                                    </th>
-                                                    <th>RM {{number_format($order->total, 2)}}</th>
-                                                    {{-- <th>{{ $item->product->product_name }} ({{ $item->weight->description }})</th>
-                                                    <th>{{ $item->product_qty }} </th>
-                                                    <th>{{ $item->sub_total }}</th> --}}
-                                                </tr>
-                                            @endforeach
-                                            <tr>
-                                                <th colspan="5"></th>
-                                                <th> Total Amount</th>
-                                                {{-- {{ number_format($customer->user_details->uPostcode->delivery_fee+$cart->sum('sub_total') ?? 0, 2) }} --}}
-                                                <th> 
-                                                    <span
-                                                    name="total_amount_span" id="total_amount_span">RM {{number_format($orders->sum('total'), 2)}}</span>
-                                                </th>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Menus</th>
+                                                <th scope="col" style="width: 60px;">Quantity</th>  <!-- Adjust the width here -->
+                                                <th scope="col">Unit Price</th>
+                                                <th scope="col">Subtotal</th>
+                                                <th scope="col">Total</th>
                                             </tr>
                                         </thead>
+                                        <tbody>
+                                            @foreach ($orders as $order)
+                                                <tr>
+                                                    <th scope="row">{{$loop->iteration}}</th>
+                                                    <th scope="row" class="text-start" style="width: 60%;">{{$order->menus->menus_name}}
+                                                        @if($order->addOn)
+                                                            @foreach ($order->addOn as $addon)
+                                                            <br> + {{$addon->menusAddon->name}}
+                                                            @endforeach
+                                                        @endif
+                                                        @if($order->menus->is_sale == 1)
+                                                        <br> Discount ({{$order->menus->discount}}%)
+                                                        @endif
+                                                    </th>
+                                                    <th scope="row" class="text-center">{{$order->quantity}}
+                                                        @if($order->addOn)
+                                                            @foreach ($order->addOn as $addon)
+                                                            <br> {{$order->quantity}}
+                                                            @endforeach
+                                                        @endif
+                                                    </th>
+                                                    <th scope="row" class="text-end">RM {{ number_format($order->menus->price, 2) }}
+                                                        @if($order->addOn)
+                                                            @foreach ($order->addOn as $addon)
+                                                            <br> RM {{ number_format($addon->menusAddon->price, 2) }}
+                                                            @endforeach
+                                                        @endif
+                                                    </th>
+                                                    <th  scope="row"  class="text-end">
+                                                        RM {{ number_format($order->menus->price * $order->quantity, 2) }} <!-- Multiplying price with quantity -->
+                                                        @if($order->addOn)
+                                                            @foreach ($order->addOn as $addon)
+                                                            <br> RM {{ number_format($addon->menusAddon->price * $order->quantity, 2) }} <!-- Add-on price multiplied by quantity -->
+                                                            @endforeach
+                                                        @endif
+                                                        @if($order->menus->is_sale == 1)
+                                                        <br>- RM {{ number_format($order->discount, 2) }}
+                                                        @endif
+                                                    </th>
+                                                    <th   scope="row"  class="text-end">RM {{number_format($order->total, 2)}}</th>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th scope="row" colspan="5" class="text-end"><strong>Total</strong></td>
+                                                <th> 
+                                                    <span name="total_amount_span" id="total_amount_span">RM {{number_format($orders->sum('total'), 2)}}</span>
+                                                </th>
+
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
