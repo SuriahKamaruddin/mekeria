@@ -31,10 +31,21 @@
                                             @enderror
                                         </div>
                                         <label>Password</label>
-                                        <div class="mb-3">
+                                        {{-- <div class="mb-3">
                                             <input type="password" class="form-control" name="password" id="password"
                                                 placeholder="Password" value="12345678" aria-label="Password"
                                                 aria-describedby="password-addon">
+                                            @error('password')
+                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                            @enderror
+                                        </div> --}}
+                                        <div class="mb-3 position-relative">
+                                            <input type="password" class="form-control" name="password" id="password" 
+                                            placeholder="Password" value="12345678" aria-label="Password" aria-describedby="password-addon">
+                                            <button type="button" id="togglePassword" class="position-absolute" 
+                                                style="top: 50%; right: 10px; transform: translateY(-50%); background: none; border: none; padding: 0;">
+                                                <i class="fa fa-eye" id="passwordIcon"></i>
+                                            </button>
                                             @error('password')
                                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                             @enderror
@@ -73,4 +84,21 @@
             </div>
         </section>
     </main>
+
+    <script>
+        $(document).ready(function () {
+            $('#togglePassword').on('click', function () {
+                const passwordField = $('#password');
+                const passwordIcon = $('#passwordIcon');
+    
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                    passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
+    </script>
 @endsection

@@ -40,8 +40,14 @@
                                         </div>
                                         <label>Password</label>
                                         <div class="mb-3">
-                                            <input type="password" class="form-control" name="password" id="password"
-                                                placeholder="Password" value="" required autofocus />
+                                            <div class="md-12 position-relative">
+                                                <input type="password" class="form-control" name="password" id="password"
+                                                    placeholder="Password" value="" aria-label="Password" aria-describedby="password-addon" required autofocus/>
+                                                <button type="button" id="togglePassword" class="position-absolute" 
+                                                    style="top: 50%; right: 10px; transform: translateY(-50%); background: none; border: none; padding: 0;">
+                                                    <i class="fa fa-eye" id="passwordIcon"></i>
+                                                </button>
+                                            </div>
                                             @error('password')
                                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                             @enderror
@@ -78,6 +84,20 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script>
+        $(document).ready(function () {
+            $('#togglePassword').on('click', function () {
+                const passwordField = $('#password');
+                const passwordIcon = $('#passwordIcon');
+    
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                    passwordIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    passwordIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
         function onloadCallback() {
             /* Place your recaptcha rendering code here */
             var response = grecaptcha.getResponse();
