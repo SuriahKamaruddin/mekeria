@@ -278,6 +278,7 @@
                                 </div>
                                 <div class="card mb-3" style="max-width: 540px;">
                                     <div id="deliveryContainer" class="delivery-content row g-0">
+                                        @if (auth()->check() == true)
                                         @if ($payments->count() > 0)
                                         <div class="card-body">
                                             @foreach ($payments as $payment)            
@@ -343,6 +344,7 @@
                                         </div>
                                         @else
                                             <h5 class="card-title">No records</h5>
+                                        @endif
                                         @endif
                                     </div>
                                 </div>
@@ -736,7 +738,7 @@
                     <li class="list-group-item">
                         <h6 class="card-title">Quantity</h6>
                         <input type="hidden" name="id-${id}" id="id-${id}">
-                        <input style="width: 50%;" type="number" id="quantity-${id}" class="form-control" placeholder="Enter quantity" value="1" min="1" max="100">
+                        <input style="width: 50%;" type="number" id="quantity-${id}" class="form-control" placeholder="Enter quantity" value="1" min="1" max="50">
                     </li>
                     </ul>
                 </div>
@@ -758,12 +760,16 @@
                 const id = $(this).data('id');
                 const quantity = $(`#quantity-${id}`).val();
 
+                if (quantity >= 50) {
+                    alert('Quantity cannot be more than 50.');
+                    return; // Stop further execution
+                };
+
                 const addons = [];
                 $("input.addon-check:checked").each(function() {
                     // Push the value of each checked checkbox into the addons array
                     addons.push($(this).val());
                 });
-
 
                 // Send data to the controller via AJAX
                 $.ajax({
@@ -868,7 +874,7 @@
                                                     <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>
                                                 </svg>
                                             </button>
-                                            <input id="cartqty${cart.id}" type="number" width="50%" class="form-control" value="${cart.quantity}">
+                                            <input id="cartqty${cart.id}" type="number" width="50%" class="form-control" min="1" max="50" value="${cart.quantity}">
                                             <button class="btn btn-secondary button-pluscart" type="button" data-id="${cart.id}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="12" width="10.5" viewBox="0 0 448 512">
                                                     <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/>
@@ -930,6 +936,12 @@
             const quantityInput = $(`#cartqty${cartId}`); // Reference the input field
             let currentQuantity = parseInt(quantityInput.val(), 10); // Get current quantity
 
+            if (currentQuantity >= 50) {
+                alert('Quantity cannot be more than 50.');
+                $(this).prop('disabled', true); // Disable the "Add" button
+                return; // Stop further execution
+            };
+
             // Increase the quantity
             currentQuantity += 1;
             quantityInput.val(currentQuantity); // Update the input field
@@ -943,7 +955,7 @@
             const cartId = $(this).data('id'); // Get cart ID
             const quantityInput = $(`#cartqty${cartId}`); // Reference the input field
             let currentQuantity = parseInt(quantityInput.val(), 10); // Get current quantity
-
+            
             if (currentQuantity > 0) {
                 currentQuantity -= 1; // Decrease the quantity
                 quantityInput.val(currentQuantity); // Update the input field
@@ -996,26 +1008,29 @@
         }
 
         $(document).ready(function () {
-            $('#logout-link').on('click', function (e) {
+            if(auth()->check() == true){
+                $('#logout-link').on('click', function (e) {
                 e.preventDefault(); // Prevent default link behavior
                 const targetUrl = $(this).data('url'); // Get the URL from data attribute
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You will be logged out of your account.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, log me out!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Redirect to the dynamic URL
-                        window.location.href = "{{ url('/logout') }}";
-                    }
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You will be logged out of your account.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, log me out!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirect to the dynamic URL
+                            window.location.href = "{{ url('/logout') }}";
+                        }
+                    });
                 });
-            });
+            }
+            
         });
 
         $(document).ready(function () {
