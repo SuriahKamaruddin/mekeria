@@ -594,7 +594,7 @@
                     <li class="list-group-item">
                         <h6 class="card-title">Quantity</h6>
                         <input type="hidden" name="id-${id}" id="id-${id}">
-                        <input style="width: 50%;" type="number" id="quantity-${id}" class="form-control" placeholder="Enter quantity" value="1" min="1" max="100">
+                        <input style="width: 50%;" type="number" id="quantity-${id}" class="form-control" placeholder="Enter quantity" value="1" min="1" max="50">
                     </li>
                     </ul>
                 </div>
@@ -615,6 +615,11 @@
             $('#add-btn').click(function() {
                 const id = $(this).data('id');
                 const quantity = $(`#quantity-${id}`).val();
+                
+                if (quantity >= 50) {
+                    alert('Quantity cannot be more than 50.');
+                    return; // Stop further execution
+                };
 
                 const addons = [];
                 $("input.addon-check:checked").each(function() {
@@ -726,7 +731,7 @@
                                                     <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>
                                                 </svg>
                                             </button>
-                                            <input id="cartqty${cart.id}" type="number" width="50%" class="form-control" value="${cart.quantity}">
+                                            <input id="cartqty${cart.id}" type="number" width="50%" class="form-control" value="${cart.quantity}" min="1" max="50" >
                                             <button class="btn btn-secondary button-pluscart" type="button" data-id="${cart.id}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="12" width="10.5" viewBox="0 0 448 512">
                                                     <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/>
@@ -787,8 +792,14 @@
             const cartId = $(this).data('id'); // Get cart ID
             const quantityInput = $(`#cartqty${cartId}`); // Reference the input field
             let currentQuantity = parseInt(quantityInput.val(), 10); // Get current quantity
-
             // Increase the quantity
+
+            if (currentQuantity >= 50) {
+                alert('Quantity cannot be more than 50.');
+                $(this).prop('disabled', true); // Disable the "Add" button
+                return; // Stop further execution
+            };
+
             currentQuantity += 1;
             quantityInput.val(currentQuantity); // Update the input field
 
