@@ -17,22 +17,26 @@ class MainController extends Controller
     {
         $category = Category::all();
         $salesItems = Menus::where('is_sale', 1)->where('is_active', 1)->whereNot('is_sold_out', 1)
-        ->whereHas('category', function($query) {
-            $query->where('is_active', 1);  // Check if category is active
-        })
-        ->get();
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1);  // Check if category is active
+            })
+            ->get();
         foreach ($category as $cat) {
             // Fetch the first 5 menus for each category
             $cat->menus = $cat->menus()->take(5)->get();
         }
-        $payments = Payment::with(['paymentorder.order.menus'])
-            ->where('customer_id', auth()->user()->id)
-            ->orderBy('updated_at', 'desc')
-            ->get();
-        $category = Category::with(['menus' => function($query) {
+        $payments = null;
+        $carts = null;
+        if (auth()->check() == true) {
+            $payments = Payment::with(['paymentorder.order.menus'])
+                ->where('customer_id', auth()->user()->id)
+                ->orderBy('updated_at', 'desc')
+                ->get();
+            $carts = Order::where('customer_id', auth()->user()->id)->where('status', '0')->get();
+        }
+        $category = Category::with(['menus' => function ($query) {
             $query->where('is_active', 1);
         }])->where('is_active', 1)->get();
-        $carts = Order::where('customer_id', auth()->user()->id)->where('status', '0')->get();
         return view('main', compact('category', 'salesItems', 'carts', 'payments'));
     }
 
@@ -42,9 +46,10 @@ class MainController extends Controller
             ->where('customer_id', auth()->user()->id)
             ->orderBy('updated_at', 'desc')
             ->get();
-        $category = Category::with(['menus' => function($query) {
+        $category = Category::with(['menus' => function ($query) {
             $query->where('is_active', 1);
         }])->where('is_active', 1)->get();
+
         $carts = Order::where('customer_id', auth()->user()->id)->where('status', '0')->get();
         return view('main_menus', compact('category', 'carts', 'payments'));
     }
@@ -55,7 +60,7 @@ class MainController extends Controller
         $menuId = $request->id;
         $quantity = $request->quantity;
         $addons = $request->addons;
-
+        
         $menu = Menus::find($menuId);
         $order = Order::where('customer_id', $user->id)
             ->where('menus_id', $menuId)
