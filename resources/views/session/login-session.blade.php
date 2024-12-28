@@ -16,7 +16,7 @@
                                     @elseif (Session::has('error'))
                                         <p class="text-danger text-xs mt-2"> {{ Session::get('error', '') }}</p>
                                     @endif
-                                    <h3 class="font-weight-bolder text-info text-warning">Welcome to Mekeria</h3>
+                                    <h3 class="font-weight-bolder" style="color: #4d0e00;">Welcome to Mekeria</h3>
                                 </div>
                                 <div class="card-body">
                                     <form role="form" method="POST" action="/session">
@@ -55,7 +55,7 @@
                                             <label class="form-check-label" for="rememberMe">Remember me</label>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn bg-warning text-dark w-100 mt-4 mb-0">Sign
+                                            <button type="submit" class="btn button-brown text-dark w-100 mt-4 mb-0">Sign
                                                 in</button>
                                         </div>
                                     </form>
@@ -84,7 +84,24 @@
             </div>
         </section>
     </main>
+<style>
+.button-brown {
+  color: white !important;
+  background-color: #4d0e00 !important;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border: 1px solid #4d0e00; /* Ensure a visible border */
+  padding: 10px 20px; /* Adjust padding if needed */
+  font-size: 16px; /* Adjust font size if needed */
+  text-align: center; /* Ensure text is aligned properly */
+}
 
+/* Hover state */
+.button-brown:hover {
+  background-color: #f28f00 !important;
+  color: white !important;
+  border-color: #f28f00 !important;
+}</style>
     <script>
         $(document).ready(function () {
             $('#togglePassword').on('click', function () {

@@ -19,30 +19,29 @@ body {
 }
 
 .bg-brown {
-  background-color: #6d421f;
+  background-color: #4d0e00;
   color: white;
 }
 
 .button-brown {
-  color: #f28f00;
-  /* Brown text */
-  background-color: #6d421f;
+  color: #f28f00 !important;
+  background-color: #4d0e00 !important;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  /* Smooth transition */
+  border: 1px solid #4d0e00; /* Ensure a visible border */
+  padding: 10px 20px; /* Adjust padding if needed */
+  font-size: 16px; /* Adjust font size if needed */
+  text-align: center; /* Ensure text is aligned properly */
 }
 
 /* Hover state */
 .button-brown:hover {
-  background-color: #f28f00;
-  /* Orange background */
-  color: #6d421f;
-  /* Brown text */
-  border-color: #f28f00;
-  /* Orange border to match background */
+  background-color: #f28f00 !important;
+  color: #4d0e00 !important;
+  border-color: #f28f00 !important;
 }
 .button-orange {
-    color: #6d421f !important;
+    color: #4d0e00 !important;
     background-color: #f28f00 !important;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
@@ -54,9 +53,9 @@ body {
 
   /* Hover state */
   .button-orange:hover {
-    background-color: #6d421f !important;
+    background-color: #4d0e00 !important;
     color: #f28f00 !important;
-    border-color: #6d421f !important;
+    border-color: #4d0e00 !important;
   }
 
 .layout_padding {

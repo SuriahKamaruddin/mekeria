@@ -495,7 +495,7 @@
             <div class="footer-info">
                 <p>
                     &copy; <span id="displayYear"></span> All Rights Reserved By Mekeria<br><br>
-                    &copy; <span id="displayYear"></span> Distributed By Mekeria
+                    <span id="displayYear"></span>  [DI210004 - Nur Arissya Amalin Binti Ahmad Noorazam Faizal]
 
                 </p>
             </div>
