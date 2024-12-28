@@ -9,9 +9,7 @@
                         <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
                             <div class="card card-plain mt-8">
                                 <div class="card-header pb-0 text-left bg-transparent">
-                                    <h3 class="text-dark">Welcome!</h1>
-                                        <p class="text-lead text-dark">Use these awesome forms to login or create new account
-                                            in your project for free.</p>
+                                    <h3 class="" style="color: #4d0e00">Welcome!</h1>
                                 </div>
                                 <div class="card-body">
                                     <form role="registrationForm" method="POST"
@@ -39,6 +37,7 @@
                                             @enderror
                                         </div>
                                         <label>Password</label>
+                                       <label for=""><small><i class="text-muted">**Password must be at least 8 characters, including at least 1 uppercase letter, 1 lowercase letter, 1 symbols and 1 number</i></small></label> 
                                         <div class="mb-3">
                                             <div class="md-12 position-relative">
                                                 <input type="password" class="form-control" name="password" id="password"
@@ -61,7 +60,7 @@
                                         </div>
                                         <div class="text-center">
                                             <button type="submit"
-                                                class="btn bg-gradient-warning w-100 my-4 mb-2">Register</button>
+                                                class="btn button-brown w-100 my-4 mb-2">Register</button>
                                         </div>
                                         <p class="text-sm mt-3 mb-0">Already have an account? <a href="login"
                                                 class="text-dark font-weight-bolder">Sign in</a></p>
@@ -81,6 +80,25 @@
             </div>
         </section>
     </main>
+    <style>
+        .button-brown {
+        color: white !important;
+        background-color: #4d0e00 !important;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+        border: 1px solid #4d0e00; /* Ensure a visible border */
+        padding: 10px 20px; /* Adjust padding if needed */
+        font-size: 16px; /* Adjust font size if needed */
+        text-align: center; /* Ensure text is aligned properly */
+        }
+
+        /* Hover state */
+        .button-brown:hover {
+        background-color: #f28f00 !important;
+        color: white !important;
+        border-color: #f28f00 !important;
+        }
+    </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script>
