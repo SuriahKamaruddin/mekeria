@@ -24,10 +24,10 @@ class RegisterController extends Controller
         $attributes = request()->validate([
             'name' => ['required', 'max:50'],
             'email' => ['required', 'email', 'max:50', Rule::unique('users', 'email')],
-            'password' => ['required', 'min:5', 'max:20', 'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+            'password' => ['required', 'min:5', 'max:20', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/'],
             'phone' => ['required', 'regex:/^\+?[0-9]{10,15}$/'],
         ],[
-            'password.regex' => 'The password must be at least 8 characters long and include at least one letter, one number, and one special character.',
+            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         ]);
         $attributes['password'] = bcrypt($attributes['password'] );
         $attributes['role_id'] = 3;
