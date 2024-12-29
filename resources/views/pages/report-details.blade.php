@@ -108,42 +108,52 @@
                         <span class="mx-2">Customer Details</span>
                         <hr class="flex-grow-1">
                     </div>
-                        <div class="row">
-                            <div class="col-2">
-                             <p class="card-text"><small class="text-muted">Name</small></p>
-                            </div>
-                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->users->name}} ({{$order->users->email}})</small></p> 
-                            </div>
-                            <div class="col-2">
-                             <p class="card-text"><small class="text-muted">Pickup/Delivery</small></p>
-                            </div>
-                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">@if($order->method_delivery == 1) Pickup at store @else Delivery @endif</small></p> 
-                            </div>
-                            @if($order->method_delivery == 2) 
-                            <div class="col-2">
-                             <p class="card-text"><small class="text-muted">Address</small></p>
-                            </div>
-                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->address1}} {{$order->address2}} {{$order->address2}}, {{$order->postcode}},{{$order->district}}</small></p> 
-                            </div>
-                            <div class="col-2">
-                             <p class="card-text"><small class="text-muted">Payment Method</small></p>
-                            </div>
-                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">@if($order->method_payment == 1) Online @else QR Code @endif</small></p> 
-                            </div>
-                            @endif
-                            <div class="col-2">
-                             <p class="card-text"><small class="text-muted">Order at</small></p>
-                            </div>
-                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{ $order->created_at->format('d-m-Y H:m A') }}</small></p> 
-                            </div>
-                            @if($order->status == 3 && $order->method_delivery == 2) 
-                            <div class="col-2">
-                             <p class="card-text"><small class="text-muted">Delivering by</small></p>
-                            </div>
-                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{ $order->deliver_by }}</small></p> 
-                            </div>
-                            @endif
+                    <div class="row">
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Name</small></p>
                         </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->name}} ({{$order->email}})</small></p> 
+                        </div>
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Phone Number</small></p>
+                        </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->contact}}</small></p> 
+                        </div>
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Pickup/Delivery</small></p>
+                        </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">@if($order->method_delivery == 1) Pickup at store @else Delivery @endif</small></p> 
+                        </div>
+                        @if($order->method_delivery == 2) 
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Address</small></p>
+                        </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->address1}} {{$order->address2}} {{$order->address2}}, {{$order->postcode}},{{$order->district}}</small></p> 
+                        </div>
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Payment Method</small></p>
+                        </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">@if($order->method_payment == 1) Online @else QR Code @endif</small></p> 
+                        </div>
+                        @endif
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Order at</small></p>
+                        </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{ $order->created_at->format('d-m-Y H:m A') }}</small></p> 
+                        </div>
+                        @if($order->status == 3 && $order->method_delivery == 2) 
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Delivering by</small></p>
+                        </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{ $order->deliver_by }}</small></p> 
+                        </div>
+                        @endif
+                        <div class="col-2">
+                         <p class="card-text"><small class="text-muted">Completed at</small></p>
+                        </div>
+                        <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{ $order->updated_at->format('d-m-Y H:m A') }}</small></p> 
+                        </div>
+                    </div>
                         <div class="d-flex align-items-center">
                             <hr class="flex-grow-1">
                             <span class="mx-2">Item Details</span>
