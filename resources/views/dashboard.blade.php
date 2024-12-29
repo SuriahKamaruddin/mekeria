@@ -194,7 +194,7 @@
                                             </g>
                                         </svg>
                                     </div>
-                                    <p class="text-xs mt-1 mb-0 font-weight-bold">Preparing</p>
+                                    <p class="text-xs mt-1 mb-0 font-weight-bold">Preparing/Delivering</p>
                                 </div>
                                 <h4 class="font-weight-bolder">{{ $preparing }}</h4>
                                 <div class="progress w-75">
@@ -300,7 +300,7 @@
                                         <span class="text-xs font-weight-bold"> @if($menu->is_sale == 1) On Sale @else N/A @endif</span>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">{{$menu->discount}}%</span>
+                                        <span class="text-xs font-weight-bold">{{$menu->discount ?? 0}}%</span>
                                     </td>
                                     <td class="align-middle text-center text-sm">
                                         <span class="text-xs font-weight-bold"> @if($menu->is_active == 1) Active @else Inactive @endif</span>

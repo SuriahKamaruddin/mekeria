@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menus;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,13 +18,12 @@ class HomeController extends Controller
         $monthlySales = [];
 
         for ($month = 1; $month <= 12; $month++) {
-            $monthlySales[] = Order::whereNot('status', 0)
-                ->whereMonth('created_at', $month)
+            $monthlySales[] = Payment::whereMonth('created_at', $month)
                 ->whereYear('created_at', Carbon::now()->year)
-                ->sum('subtotal');
+                ->sum('total');
         }
 
-        $menuIds = Order::distinct()->pluck('menus_id'); // Get all unique menu IDs
+        $menuIds = Order::where('status',1)->distinct()->pluck('menus_id'); // Get all unique menu IDs
         $monthlySalesByMenu = [];
 
         foreach ($menuIds as $menuId) {
@@ -31,7 +31,6 @@ class HomeController extends Controller
             $monthlySales = [];
             for ($month = 1; $month <= 12; $month++) {
                 $monthlySales[] = Order::where('menus_id', $menuId) // Filter by menu ID
-                    ->whereNot('status', 0)
                     ->whereMonth('created_at', $month)
                     ->whereYear('created_at', Carbon::now()->year)
                     ->sum('subtotal');
@@ -42,24 +41,22 @@ class HomeController extends Controller
         $orderCount = Order::whereNot('status', 0)
             ->whereDate('created_at', Carbon::today())
             ->count();
-        $sales = Order::whereNot('status', 0)
-            ->whereMonth('created_at', Carbon::now()->month)
+        $sales = Payment::whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
-            ->sum('subtotal');
-        $dailySales = Order::whereNot('status', 0)
-            ->whereDate('created_at', Carbon::today())
-            ->sum('subtotal');
+            ->sum('total');
+        $dailySales = Payment::whereDate('created_at', Carbon::today())
+            ->sum('total');
 
         $cart = Order::where('status', 0)
             ->whereDate('created_at', Carbon::today())
             ->count();
-        $new = Order::where('status', 1)
+        $new = Payment::where('status', 1)
             ->whereDate('created_at', Carbon::today())
             ->count();
-        $preparing = Order::where('status', 2)
+        $preparing = Payment::whereIn('status', [2,3])
             ->whereDate('created_at', Carbon::today())
             ->count();
-        $completed = Order::where('status', 3)
+        $completed = Payment::where('status', 4)
             ->whereDate('created_at', Carbon::today())
             ->count();
 
