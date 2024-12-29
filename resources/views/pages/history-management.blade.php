@@ -27,7 +27,12 @@
                             <div class="col-2">
                              <p class="card-text"><small class="text-muted">Name</small></p>
                             </div>
-                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->users->name}} ({{$order->users->email}})</small></p> 
+                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->name}} ({{$order->email}})</small></p> 
+                            </div>
+                            <div class="col-2">
+                             <p class="card-text"><small class="text-muted">Phone Number</small></p>
+                            </div>
+                            <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold">{{$order->contact}}</small></p> 
                             </div>
                             <div class="col-2">
                              <p class="card-text"><small class="text-muted">Pickup/Delivery</small></p>
