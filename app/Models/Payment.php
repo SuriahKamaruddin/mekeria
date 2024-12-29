@@ -21,7 +21,12 @@ class Payment extends Model
         'payment_img',
         'status',
         'updated_by',
-        'deliver_by'
+        'deliver_by',
+        'name',
+        'contact',
+        'email',
+        'total_payment'
+
     ];
     use HasFactory;
 
