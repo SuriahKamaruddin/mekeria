@@ -66,7 +66,7 @@ class MainController extends Controller
             ->where('menus_id', $menuId)
             ->where('status', 0)
             ->first();
-        $totalquantity2 =$order->quantity + $quantity; 
+        $totalquantity2 = $order->quantity + $quantity;
         if (($totalquantity2) >= 51) {
             return response()->json(['error' => true, 'message' => 'Error! Quantity cannot be more than 50.']);
         }
@@ -264,7 +264,7 @@ class MainController extends Controller
             'name' => $request->customer_name ?? '',
             'contact' => $request->customer_contact ?? '',
             'email' => $request->email ?? '',
-            'total_payment' => $request->overall_total ?? 0
+            'total' => $request->overall_total ?? 0
 
             // 'payment_img'
         ]);

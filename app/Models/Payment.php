@@ -25,7 +25,7 @@ class Payment extends Model
         'name',
         'contact',
         'email',
-        'total_payment'
+        'total'
 
     ];
     use HasFactory;
