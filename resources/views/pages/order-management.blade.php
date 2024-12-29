@@ -71,7 +71,7 @@
                             <div class="col-2">
                                 <p class="card-text"><small class="text-muted">Payment Receipt</small></p>
                                </div>
-                               <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold"><a href="{{ asset('storage/mekeria/payment/' . $order->payment_img) }}"></a></small></p> 
+                               <div class="col-10"> <p class="card-text">: <small class="text-dark font-weight-bold"><a target="_blank" href="{{ asset('storage/mekeria/payment/' . $order->payment_img) }}">{{$order->payment_img}}</a></small></p> 
                                </div>
                             @endif
                             <div class="col-2">
