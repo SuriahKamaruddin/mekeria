@@ -643,8 +643,9 @@
                             $('#cart-modal').modal('hide');
                             $("#cart-sidebar").addClass("open");
                             displayCart();
-                        } else {
-                            alert('There was an issue adding the item to the cart.');
+                        }
+                        else {
+                            alert(response.message);
                         }
                     },
                     error: function(xhr, status, error) {

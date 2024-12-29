@@ -239,6 +239,7 @@
                                                 <th scope="row" colspan="5" class="text-end"><strong>Total</strong></td>
                                                 <th> 
                                                     <span name="total_amount_span" id="total_amount_span">RM {{number_format($orders->sum('total'), 2)}}</span>
+                                                    <input type="hidden" name="overall_total" id="overall_total" value="{{number_format($orders->sum('total'), 2)}}">
                                                 </th>
 
                                             </tr>

@@ -66,6 +66,10 @@ class MainController extends Controller
             ->where('menus_id', $menuId)
             ->where('status', 0)
             ->first();
+
+        if($order->quantity >= 50){
+            return response()->json(['error' => true, 'message' => 'Error! Exceed the maximun order quantity.']);
+        }
         // Flag to determine if we need to create a new order or not
         $createNewOrder = false;
         if ($order) {
@@ -256,7 +260,12 @@ class MainController extends Controller
             'address3' => $request->address_3 ?? '',
             'district' => $request->district ?? '',
             'postcode' => $request->postcode ?? '',
-            'status' => 1
+            'status' => 1,
+            'name' => $request->customer_name ?? '',
+            'contact' => $request->customer_contact ?? '',
+            'email' =>$request->email ?? '',
+            'total_payment' => $request->overall_total ?? 0
+
             // 'payment_img'
         ]);
         if ($request->hasFile('payment_receipt')) {

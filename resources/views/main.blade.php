@@ -787,7 +787,7 @@
                             $("#cart-sidebar").addClass("open");
                             displayCart();
                         } else {
-                            alert('There was an issue adding the item to the cart.');
+                            alert(response.message);
                         }
                     },
                     error: function(xhr, status, error) {
