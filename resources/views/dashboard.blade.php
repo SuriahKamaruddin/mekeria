@@ -194,7 +194,7 @@
                                             </g>
                                         </svg>
                                     </div>
-                                    <p class="text-xs mt-1 mb-0 font-weight-bold">Preparing/ <br> Delivering</p>
+                                    <p class="text-xs mt-1 mb-0 font-weight-bold">Prepare/Deliver</p>
                                 </div>
                                 <h4 class="font-weight-bolder">{{ $preparing }}</h4>
                                 <div class="progress w-75">
@@ -217,7 +217,7 @@
                                         </svg>
 
                                     </div>
-                                    <p class="text-xs mt-1 mb-0 font-weight-bold">Completed</p>
+                                    <p class="text-xs mt-1 mb-0 font-weight-bold">Completed<br></p>
                                 </div>
                                 <h4 class="font-weight-bolder">{{ $completed }}</h4>
                                 <div class="progress w-75">
