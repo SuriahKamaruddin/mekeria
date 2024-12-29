@@ -67,7 +67,7 @@ class MainController extends Controller
             ->where('status', 0)
             ->first();
 
-        if($order->quantity >= 50){
+        if(($order->quantity + $quantity) >= 50){
             return response()->json(['error' => true, 'message' => 'Error! Exceed the maximun order quantity.']);
         }
         // Flag to determine if we need to create a new order or not
