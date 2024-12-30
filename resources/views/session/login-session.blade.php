@@ -24,7 +24,7 @@
                                         <label>Email</label>
                                         <div class="mb-3">
                                             <input type="email" class="form-control" name="email" id="email"
-                                                placeholder="Email" value="admin@mekeria.com" aria-label="Email"
+                                                placeholder="Email" value="" aria-label="Email"
                                                 aria-describedby="email-addon">
                                             @error('email')
                                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
@@ -41,7 +41,7 @@
                                         </div> --}}
                                         <div class="mb-3 position-relative">
                                             <input type="password" class="form-control" name="password" id="password" 
-                                            placeholder="Password" value="12345678" aria-label="Password" aria-describedby="password-addon">
+                                            placeholder="Password" value="" aria-label="Password" aria-describedby="password-addon">
                                             <button type="button" id="togglePassword" class="position-absolute" 
                                                 style="top: 50%; right: 10px; transform: translateY(-50%); background: none; border: none; padding: 0;">
                                                 <i class="fa fa-eye" id="passwordIcon"></i>
