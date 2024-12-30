@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $categories = Category::all();
-        return view('product.category-management',compact('categories'));
+        return view('product.category-management', compact('categories'));
     }
-    public function add_category(Request $request){
+    public function add_category(Request $request)
+    {
         $type = $request->type;
         $id = $request->id;
         if ($type == 0) {
@@ -24,19 +26,20 @@ class CategoryController extends Controller
         }
         return view('product.add-category-management', compact('category', 'type', 'id'));
     }
-    public function insert_category(Request $request){
+    public function insert_category(Request $request)
+    {
 
         $type = $request->type;
         $id = $request->id;
 
-        if($type == 0){
+        if ($type == 0) {
             $category = Category::create([
                 'category_name' => $request->category_name,
                 'category_description' => $request->category_detail,
                 //'category_img' => $fileNameToStore,
                 'is_active' => $request->status,
             ]);
-            if($request->hasFile('category_img')){
+            if ($request->hasFile('category_img')) {
                 $attachment = $request->file('category_img');
                 $att_name = $attachment->getClientOriginalName();
                 $filename = pathinfo($att_name, PATHINFO_FILENAME);
@@ -44,20 +47,20 @@ class CategoryController extends Controller
                 $fileNameToStore = $filename . '_' . rand() . '.' . $extension;
                 $path = $attachment->move(storage_path('app/public/mekeria/category'), $fileNameToStore);
 
-                $category= Category::where('id', $category->id)->update([
+                $category = Category::where('id', $category->id)->update([
                     'category_img' => $fileNameToStore,
                 ]);
             }
-        }else{
+        } else {
             $category = Category::where('id', $id)->update([
                 'category_name' => $request->category_name,
                 'category_description' => $request->category_detail,
                 'is_active' => $request->status,
             ]);
-            if($request->hasFile('category_img')){
+            if ($request->hasFile('category_img')) {
                 $category = Category::where('id', $id)->first();
-                $file_path = storage_path('app/public/makeria/category/'.$request->category_img);
-                if(File::exists($file_path)){
+                $file_path = storage_path('app/public/makeria/category/' . $request->category_img);
+                if (File::exists($file_path)) {
                     File::delete(($file_path));
                 }
                 $attachment = $request->file('category_img');
@@ -71,29 +74,29 @@ class CategoryController extends Controller
                 ]);
             }
         }
-        
+
         if ($category) {
-            if($type == 0){
+            if ($type == 0) {
                 $message = 'New category have been added!';
-            }else{
+            } else {
                 $message = 'Selected category have been updated!';
             }
             return redirect()->route('category-index')->with('success', $message);
         } else {
             $message = 'Failed to save menu. Please try again later.';
-            return redirect()->route('category-index')->with('error', $message); 
+            return redirect()->route('category-index')->with('error', $message);
         }
-        
     }
 
-    public function delete_category(Request $request){
+    public function delete_category(Request $request)
+    {
         $category = Category::where('id', $request->id)->first();
         $attach = $category->category_img;
         $file_path = storage_path('app/public/mekeria/category/' . $attach);
         if (File::exists($file_path)) {
-            File::delete($file_path);
+            //File::delete($file_path);
         }
-        $category = Category::where('id', $request->id)->delete();
+        $category = Category::where('id', $request->id)->update(['is_active'=> 0]);
 
         if ($category) {
             $message = 'Selected category have been delected!';

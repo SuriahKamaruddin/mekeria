@@ -25,7 +25,7 @@ class MenusController extends Controller
         $id = $request->id;
         $categorys = Category::all();
         $menusaddons = MenusAddon::all();
-        
+
 
         if ($type == 0) {
             $menus = null;
@@ -35,14 +35,14 @@ class MenusController extends Controller
             $menuWithAddons = Menus::with('menus_addons')->find($id);
             $selectedAddons = $menuWithAddons->menus_addons->pluck('id')->toArray() ?? [];
         }
-        return view('product.add-menus-management', compact('categorys', 'menus', 'type', 'id', 'menusaddons','selectedAddons'));
+        return view('product.add-menus-management', compact('categorys', 'menus', 'type', 'id', 'menusaddons', 'selectedAddons'));
     }
     public function insert_product(Request $request)
     {
         $type = $request->type;
         $id = $request->id;
         if ($type == 0) {
-            
+
             $menus = Menus::create([
                 'category_id' => $request->category,
                 'menus_name' => $request->menus_name,
@@ -55,7 +55,7 @@ class MenusController extends Controller
                 'discount' => $request->discount ?? 0,
                 'is_addon' => $request->is_addon,
             ]);
-            
+
             $menusId = $menus->id;
             if ($request->hasFile('menus_img')) {
                 $attachment = $request->file('menus_img');
@@ -69,7 +69,7 @@ class MenusController extends Controller
                     'menus_img' => $fileNameToStore,
                 ]);
             };
-            if($request->is_addon == 1){
+            if ($request->is_addon == 1) {
                 if ($request->has('addonCheckbox')) {
                     $menusAddonMap = MenusAddonMaps::where('menus_id', $menusId)->first();
 
@@ -77,7 +77,7 @@ class MenusController extends Controller
                         $menusAddonMap->delete();
                     }
                     $addonIds = $request->addonCheckbox; // Array of selected add-on IDs
-    
+
                     foreach ($addonIds as $addonId) {
                         $menusAddonMap = MenusAddonMaps::firstOrCreate([
                             'menus_id' => $menusId,
@@ -86,7 +86,6 @@ class MenusController extends Controller
                     }
                 }
             }
-            
         } else {
             $menus = Menus::where('id', $id)->update([
                 'category_id' => $request->category,
@@ -118,7 +117,7 @@ class MenusController extends Controller
                     'menus_img' => $fileNameToStore,
                 ]);
             }
-            if($request->is_addon == 1){
+            if ($request->is_addon == 1) {
                 if ($request->has('addonCheckbox')) {
                     $menusAddonMap = MenusAddonMaps::where('menus_id', $id)->delete();
                     $addonIds = $request->addonCheckbox; // Array of selected add-on IDs
@@ -129,7 +128,7 @@ class MenusController extends Controller
                             'menus_addon_id' => $addonId,
                         ]);
                     }
-                }else{
+                } else {
                     $menusAddonMap = MenusAddonMaps::where('menus_id', $id)->get();
 
                     if ($menusAddonMap) {
@@ -138,7 +137,7 @@ class MenusController extends Controller
                         }
                     }
                 }
-            }else{
+            } else {
                 $menusAddonMap = MenusAddonMaps::where('menus_id', $id)->delete();
             }
             $menus = Menus::where('id', $id)->first();
@@ -162,9 +161,9 @@ class MenusController extends Controller
         $attach = $menus->menus_img;
         $file_path = storage_path('app/public/mekeria/menus/' . $attach);
         if (File::exists($file_path)) {
-            File::delete($file_path);
+            //File::delete($file_path);
         }
-        $menus = Menus::where('id', $request->id)->delete();
+        $menus = Menus::where('id', $request->id)->update(['is_active'=> 0]);
 
         if ($menus) {
             $message = 'Selected menu have been delected!';
@@ -175,7 +174,8 @@ class MenusController extends Controller
         }
     }
 
-    public function update_on_sales_product(Request $request){
+    public function update_on_sales_product(Request $request)
+    {
         $id = $request->id;
         $is_on_sales = $request->is_on_sales;
         $isOnSalesString = $request->input('is_on_sales');
@@ -193,12 +193,12 @@ class MenusController extends Controller
             $message = 'Failed to save menu. Please try again later.';
             return redirect()->route('menus-index')->with('error', $message);
         }
-
     }
-    public function update_sales_out_product(Request $request){
+    public function update_sales_out_product(Request $request)
+    {
         $id = $request->id;
         $is_sold_out = $request->is_sold_out;
-        
+
         $menus = Menus::where('id', $id)->update([
             'is_sold_out' =>  $request->is_sold_out == "1" ? 0 : 1,
         ]);
