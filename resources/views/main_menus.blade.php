@@ -514,10 +514,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
     <script src="{{ asset('assets/guest_assets/js/custom.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         $(document).ready(function() {
             displayCart();
-
+            hideDatafromAddmin();
         // Check session status every 60 seconds
         const sessionCheckInterval = 60000; // 60 seconds
 
@@ -787,8 +788,20 @@
                     $('#cartContainer').append('Cart is empty');
                 }
             });
-        }
-
+        };
+        function hideDatafromAddmin(){
+            var isLogin = "{{auth()->user() == true}}";
+            var userrole = "{{ auth()->user()->role_code ?? ''}}";
+            if(isLogin == 1 && (userrole == 'A' || userrole == 'S')){
+                $('.add-to-cart').hide();
+                $('.cart_link').hide();
+                $('.delivery_link').hide();
+            }else{
+                $('.add-to-cart').show();
+                $('.cart_link').show();
+                $('.delivery_link').show();
+            }
+        };
         $(document).on('click', '.button-pluscart', function() {
             const cartId = $(this).data('id'); // Get cart ID
             const quantityInput = $(`#cartqty${cartId}`); // Reference the input field

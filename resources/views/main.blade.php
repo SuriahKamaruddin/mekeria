@@ -654,35 +654,36 @@
     <!-- custom js -->
     <script src="{{ asset('assets/guest_assets/js/custom.js') }}"></script>
     <!-- Google Map -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-    </script>
+    {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+    </script> --}}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         $(document).ready(function() {
             displayCart();
+            hideDatafromAddmin();
+            // Check session status every 60 seconds
+            const sessionCheckInterval = 60000; // 60 seconds
 
-        // Check session status every 60 seconds
-        const sessionCheckInterval = 60000; // 60 seconds
-
-        setInterval(function () {
-            $.ajax({
-                url: "{{ route('session.check') }}",
-                type: "GET",
-                success: function (response) {
-                    if (response.status === 'inactive') {
-                        // Optional: Handle inactive session if the API provides such info
-                        console.log("Session is still active.");
+            setInterval(function () {
+                $.ajax({
+                    url: "{{ route('session.check') }}",
+                    type: "GET",
+                    success: function (response) {
+                        if (response.status === 'inactive') {
+                            // Optional: Handle inactive session if the API provides such info
+                            console.log("Session is still active.");
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 401) {
+                            // Redirect to the login page if the session has expired
+                            window.location.href = "{{ route('destroy') }}";
+                        }
                     }
-                },
-                error: function (xhr) {
-                    if (xhr.status === 401) {
-                        // Redirect to the login page if the session has expired
-                        window.location.href = "{{ route('destroy') }}";
-                    }
-                }
-            });
-        }, sessionCheckInterval);
+                });
+            }, sessionCheckInterval);
             $(".add-to-cart").on("click", function(e) {
                 const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === 'true';
 
@@ -931,6 +932,20 @@
             });
         }
 
+        function hideDatafromAddmin(){
+            var isLogin = "{{auth()->user() == true}}";
+            var userrole = "{{ auth()->user()->role_code ?? ''}}";
+            if(isLogin == 1 && (userrole == 'A' || userrole == 'S')){
+                $('.add-to-cart').hide();
+                $('.cart_link').hide();
+                $('.delivery_link').hide();
+            }else{
+                $('.add-to-cart').show();
+                $('.cart_link').show();
+                $('.delivery_link').show();
+            }
+        };
+
         $(document).on('click', '.button-pluscart', function() {
             const cartId = $(this).data('id'); // Get cart ID
             const quantityInput = $(`#cartqty${cartId}`); // Reference the input field
@@ -1008,7 +1023,8 @@
         }
 
         $(document).ready(function () {
-            if(auth()->check() == true){
+            var isLogin = "{{auth()->user() == true}}";
+            if(isLogin == 1){
                 $('#logout-link').on('click', function (e) {
                 e.preventDefault(); // Prevent default link behavior
                 const targetUrl = $(this).data('url'); // Get the URL from data attribute
