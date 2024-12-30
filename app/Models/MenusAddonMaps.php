@@ -14,7 +14,6 @@ class MenusAddonMaps extends Model
     [
         'menus_id',
         'menus_addon_id',
-        'is_active',
     ];
     
     public function menus()
