@@ -97,10 +97,10 @@
                             <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
                         </div>
                     </div>
-                    <h6 class="ms-2 mt-4 mb-0"> Montly Sales Data</h6>
+                    <h6 class="ms-2 mt-4 mb-0"> Daily Proccess Data</h6>
                     <div class="container border-radius-lg">
                         <div class="row">
-                            <div class="col-3 py-3 ps-0">
+                            <div class="col-6 py-3 ps-0">
                                 <div class="d-flex mb-2">
                                     <div
                                         class="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-warning text-center me-2 d-flex align-items-center justify-content-center">
@@ -132,7 +132,7 @@
                                         aria-valuenow="{{ $cart }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
-                            <div class="col-3 py-3 ps-0">
+                            <div class="col-6 py-3 ps-0">
                                 <div class="d-flex mb-2">
                                     <div
                                         class="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-info text-center me-2 d-flex align-items-center justify-content-center">
@@ -170,10 +170,10 @@
                                         aria-valuenow="{{ $new }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
-                            <div class="col-3 py-3 ps-0">
+                            <div class="col-6 py-3 ps-0">
                                 <div class="d-flex mb-2">
                                     <div
-                                        class="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-warning text-center me-2 d-flex align-items-center justify-content-center">
+                                        class="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center">
                                         <svg width="10px" height="10px" viewBox="0 0 43 36" version="1.1"
                                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                             <title>credit-card</title>
@@ -202,7 +202,7 @@
                                         aria-valuenow="{{ $preparing }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
-                            <div class="col-3 py-3 ps-0">
+                            <div class="col-6 py-3 ps-0">
                                 <div class="d-flex mb-2">
                                     <div
                                         class="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-success text-center me-2 d-flex align-items-center justify-content-center">
